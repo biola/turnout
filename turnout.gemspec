@@ -13,5 +13,5 @@ spec = Gem::Specification.new do |s|
   s.author = "Adam Crownoble"
   s.email = "adam.crownoble@biola.edu"
   s.homepage = "https://github.com/biola/turnout"
-  s.add_dependency('nokogiri', '~>1.3')
+  s.add_dependency('nokogiri', '>1.3')
 end
