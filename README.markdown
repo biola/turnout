@@ -1,20 +1,26 @@
 Turnout
 =======
-Turnout is a Ruby on Rails engine with a Rack component that allows you to put your Rails app in maintenance mode.
+Turnout is a [Ruby on Rails](http://rubyonrails.org) engine with a [Rack](http://rack.rubyforge.org/) component that allows you to put your Rails app in maintenance mode.
 
 Features
 ========
 * Easy installation
 * Rake commands to turn maintenance mode on and off
-* Easily override the default maintenance.html file with your own
-* Allow certain IPs or IP ranges to bypass the maintenance page
 * Easily provide a reason for each downtime without editing the maintenance.html file
+* Allow certain IPs or IP ranges to bypass the maintenance page
+* Allow certain paths to be accessible during maintenance
+* Easily override the default maintenance.html file with your own
+* Simple [YAML](http://yaml.org) based config file for easy activation, deactivation and configuration without the rake commands
 
 Installation
 ============
 In your Gemfile add:
 
     gem 'turnout'
+
+then run
+
+    bundle install
 
 Activation
 ==========
@@ -24,6 +30,10 @@ Activation
 or
 
     rake maintenance:start reason="Somebody googled Google!"
+    
+or
+
+    rake maintenance:start allowed_paths="/login,^/faqs/[0-9]*"
 
 or
 
@@ -31,9 +41,15 @@ or
 
 or
 
-    rake maintenance:start reason="Someone told me I should type <code>sudo rm -rf /</code>" allowed_ips="127.0.0.1,192.168.0.0/24"
+    rake maintenance:start reason="Someone told me I should type <code>sudo rm -rf /</code>" allowed_paths="^/help,^/contact_us" allowed_ips="127.0.0.1,192.168.0.0/24"
 
-*Notice that you can allow multiple IP addresses or IP ranges using [CIDR notation](http://en.wikipedia.org/wiki/CIDR_notation).*
+Notes
+-----
+* The `reason` parameter can contain HTML
+* Multiple `allowed_paths` and `allowed_ips` can be given. Just comma separate them.
+* All `allowed_paths` are treated as regular expressions.
+* If you need to use a comma in an `allowed_paths` regular expression just escape it with a backslash: `\,`.
+* IP ranges can be given to `allowed_ips` using [CIDR notation](http://en.wikipedia.org/wiki/CIDR_notation).
 
 Deactivation
 ============
@@ -58,6 +74,9 @@ Example maintenance.yml File
 
     ---
     reason: Someone told me I should type <code>sudo rm -rf /</code>
+    allowed_paths:
+    - ^/help
+    - ^/contact_us
     allowed_ips:
     - 127.0.0.1
     - 192.168.0.0/24
