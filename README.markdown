@@ -11,6 +11,7 @@ Features
 * Allow certain paths to be accessible during maintenance
 * Easily override the default maintenance.html file with your own
 * Simple [YAML](http://yaml.org) based config file for easy activation, deactivation and configuration without the rake commands
+* Supports Rails 2.3 - 3.0 and Ruby 1.8.7 - 1.9.3
 
 Installation
 ============
