@@ -1,6 +1,6 @@
 namespace :maintenance do
 
-  desc 'Enable the maintenance mode page ("reason" and/or "allowed_ips" can be passed as environment variables)'
+  desc 'Enable the maintenance mode page ("reason", "allowed_paths" and "allowed_ips" can be passed as environment variables)'
   task :start do |t, args|
     settings = {
       'reason' => ENV['reason'],
@@ -28,10 +28,13 @@ namespace :maintenance do
   end
 
   def split_paths(paths_string)
-    # used negative lookbehind to split on "," but not on "\,"
-    paths = paths_string.to_s.split(/(?<!\\),\ ?/)
+    # I had this for 1.9.2 but no lookbehinds in 1.8.7 :(
+    #paths = paths_string.to_s.split(/(?<!\\),\ ?/)
+
+    # Grab everything between commas that aren't escaped with a backslash
+    paths = paths_string.to_s.scan(/(?:\\,|[^,])+/)
     paths.map! do |path|
-      path.gsub('\,', ',') # remove the escape characters
+      path.strip.gsub('\,', ',') # remove the escape characters
     end
     paths
   end

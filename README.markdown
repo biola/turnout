@@ -14,13 +14,30 @@ Features
 
 Installation
 ============
-In your Gemfile add:
+Rails 3
+-------
+In your `Gemfile` add:
 
     gem 'turnout'
 
 then run
 
     bundle install
+    
+Rails 2.3
+---------
+In your `config/environment.rb` file add:
+
+    config.gem 'turnout'
+
+then run
+
+    rake gems:install
+
+then in your `Rakefile` add:
+
+    require 'turnout/rake_tasks'
+    
 
 Activation
 ==========

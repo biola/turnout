@@ -1,3 +1,3 @@
 module Turnout
-  require 'turnout/engine' if defined?(Rails)
+  require 'turnout/engine'
 end
