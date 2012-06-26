@@ -24,15 +24,27 @@ class Rack::Turnout
   
   def on?(env)
     request = Rack::Request.new(env)
-    
-    return false if path_allowed?(request.path)
+
     return false if ip_allowed?(request.ip)
+
+    if settings && settings['denied_paths'] && settings['denied_paths'].length > 0
+      return path_denied?(request.path)
+    end
+
+    return false if path_allowed?(request.path)
     File.exists? settings_file
   end
 
   def path_allowed?(path)
     (settings['allowed_paths'] || []).each do |allowed_path|
-      return true if path =~ Regexp.new(allowed_path)
+      return true if Regexp.new(allowed_path).match(path)
+    end
+    false
+  end
+
+  def path_denied?(path)
+    (settings['denied_paths'] || []).each do |denied_path|
+      return true if Regexp.new(denied_path).match(path)
     end
     false
   end
