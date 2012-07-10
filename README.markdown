@@ -79,6 +79,15 @@ Customization
 
 A [default maintenance page](https://github.com/biola/turnout/blob/master/public/maintenance.html) is provided, but you can create your own `public/maintenance.html` instead. If you provide a `reason` to the rake task, Turnout will use [Nokogiri](http://nokogiri.org) to parse the `maintenance.html` file and attempt to find a tag with `id="reason"`. It will replace the `inner_html` of the tag with the reason you provided. So be sure your `maintenance.html` file can be parsed as HTML.
 
+Tips
+====
+
+There is no `denied_paths` feature because turnout denies everyhing by default.
+However you can achieve the same sort of functionality by using
+[negative lookaheads](http://www.regular-expressions.info/lookaround.html) with the `allowed_paths` setting, like so:
+
+    rake maintenance:start allowed_paths="^(?!/your/under/maintenance/path)"
+
 Behind the Scenes
 =================
 On every request the Rack app will check to see if `tmp/maintenance.yml` exists. If the file exists the maintenance page will be shown (unless allowed IPs are given and the requester is in the allowed range).
