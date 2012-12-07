@@ -5,7 +5,7 @@ require 'rails' unless defined? Rails
 # For Rails 3
 if defined? Rails::Engine
 
-  require 'active_record'
+  #require 'active_record'
 
   module Turnout
     class Engine < Rails::Engine
