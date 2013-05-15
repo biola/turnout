@@ -1,4 +1,4 @@
-Turnout
+Turnout [![Build Status](https://travis-ci.org/biola/turnout.png?branch=master)](https://travis-ci.org/biola/turnout)
 =======
 Turnout is a [Ruby on Rails](http://rubyonrails.org) engine with a [Rack](http://rack.rubyforge.org/) component that allows you to put your Rails app in maintenance mode.
 
@@ -24,7 +24,7 @@ In your `Gemfile` add:
 then run
 
     bundle install
-    
+
 Rails 2.3
 ---------
 In your `config/environment.rb` file add:
@@ -38,7 +38,7 @@ then run
 then in your `Rakefile` add:
 
     require 'turnout/rake_tasks'
-    
+
 
 Activation
 ==========
@@ -48,7 +48,7 @@ Activation
 or
 
     rake maintenance:start reason="Somebody googled Google!"
-    
+
 or
 
     rake maintenance:start allowed_paths="/login,^/faqs/[0-9]*"
