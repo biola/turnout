@@ -4,7 +4,6 @@ require 'ipaddr'
 require 'nokogiri'
 
 class Rack::Turnout
-
   def initialize(app, config={})
     @app = app
     @config = config
@@ -12,7 +11,7 @@ class Rack::Turnout
 
   def call(env)
     reload_settings
-  
+
     if on?(env)
       [ 503, { 'Content-Type' => 'text/html', 'Content-Length' => content_length }, [content] ]
     else
@@ -21,13 +20,13 @@ class Rack::Turnout
   end
 
   protected
-  
+
   def on?(env)
     request = Rack::Request.new(env)
-    
+
     return false if path_allowed?(request.path)
     return false if ip_allowed?(request.ip)
-    File.exists? settings_file
+    maintenance_file_exists?
   end
 
   def path_allowed?(path)
@@ -68,6 +67,10 @@ class Rack::Turnout
     app_root.join('tmp', 'maintenance.yml')
   end
 
+  def maintenance_file_exists?
+    File.exists? settings_file
+  end
+
   def maintenance_page
     File.exists?(app_maintenance_page) ? app_maintenance_page : default_maintenance_page
   end
@@ -86,14 +89,13 @@ class Rack::Turnout
 
   def content
     content = File.open(maintenance_page, 'rb').read
-    
+
     if settings['reason']
       html = Nokogiri::HTML(content)
       html.at_css('#reason').inner_html = Nokogiri::HTML.fragment(settings['reason'])
       content = html.to_s
     end
-    
+
     content
   end
-
 end

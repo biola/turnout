@@ -6,12 +6,16 @@ require 'turnout/version'
 spec = Gem::Specification.new do |s|
   s.name = 'turnout'
   s.version = Turnout::VERSION
-  s.summary = "A Rack based maintenance mode plugin for Rails"
-  s.description = "Turnout makes it easy to put your Rails application into maintenance mode"
+  s.summary = 'A Rack based maintenance mode plugin for Rails'
+  s.description = 'Turnout makes it easy to put your Rails application into maintenance mode'
   s.files = Dir['README.*', 'MIT-LICENSE', 'rails/*.rb', 'config/**/*.rb', 'lib/**/*.rb', 'lib/tasks/*.rake', 'public/*']
   s.require_path = 'lib'
-  s.author = "Adam Crownoble"
-  s.email = "adam.crownoble@biola.edu"
-  s.homepage = "https://github.com/biola/turnout"
+  s.author = 'Adam Crownoble'
+  s.email = 'adam.crownoble@biola.edu'
+  s.homepage = 'https://github.com/biola/turnout'
   s.add_dependency('nokogiri', '~>1.3')
+  s.add_dependency('rack')
+  s.add_development_dependency('rack-test')
+  s.add_development_dependency('rails')
+  s.add_development_dependency('rspec', '~> 2.12')
 end

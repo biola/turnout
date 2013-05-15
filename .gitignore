@@ -1,3 +1,6 @@
 .DS_Store
+.bundle
+.rspec
 *~
 *.gem
+Gemfile.lock
