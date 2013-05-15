@@ -5,6 +5,7 @@ namespace :maintenance do
     settings = {
       'reason' => ENV['reason'],
       'allowed_paths' => split_paths(ENV['allowed_paths']),
+      'denied_paths' => split_paths(ENV['denied_paths']),
       'allowed_ips' => split_ips(ENV['allowed_ips'])
     }
      
