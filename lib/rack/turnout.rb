@@ -89,7 +89,7 @@ class Rack::Turnout
     
     if settings['reason']
       html = Nokogiri::HTML(content)
-      html.at_css('#reason').inner_html = settings['reason']
+      html.at_css('#reason').inner_html = Nokogiri::HTML.fragment(settings['reason'])
       content = html.to_s
     end
     
