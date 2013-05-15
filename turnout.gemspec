@@ -16,6 +16,5 @@ spec = Gem::Specification.new do |s|
   s.add_dependency('nokogiri', '~>1.3')
   s.add_dependency('rack')
   s.add_development_dependency('rack-test')
-  s.add_development_dependency('rails')
   s.add_development_dependency('rspec', '~> 2.12')
 end

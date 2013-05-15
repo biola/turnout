@@ -1,6 +1,6 @@
 require 'turnout'
 require 'rack/turnout'
-require 'rails' unless defined? Rails
+require 'rails'
 
 # For Rails 3
 if defined? Rails::Engine
