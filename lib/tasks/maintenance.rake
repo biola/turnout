@@ -1,5 +1,4 @@
 namespace :maintenance do
-
   desc 'Enable the maintenance mode page ("reason", "allowed_paths" and "allowed_ips" can be passed as environment variables)'
   task :start do |t, args|
     settings = {
@@ -7,22 +6,22 @@ namespace :maintenance do
       'allowed_paths' => split_paths(ENV['allowed_paths']),
       'allowed_ips' => split_ips(ENV['allowed_ips'])
     }
-     
+
     file = File.open settings_file, 'w'
     file.write settings.to_yaml
     file.close
-    
+
     puts "Created #{settings_file}"
     puts "Run `rake maintenance:end` to stop maintenance mode"
   end
 
   desc 'Disable the maintenance mode page'
-  task :end do 
+  task :end do
     File.delete settings_file
-    
+
     puts "Deleted #{settings_file}"
   end
-  
+
   def settings_file
     Rails.root.join('tmp', 'maintenance.yml')
   end
@@ -42,5 +41,4 @@ namespace :maintenance do
   def split_ips(ips_string)
     ips_string.to_s.split(',')
   end
-
 end
