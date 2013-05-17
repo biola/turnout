@@ -27,7 +27,10 @@ class Rack::Turnout
 
   def json?(env)
     request = Rack::Request.new(env)
-    return false if 
+    return true if settings['json_for_all_requests']
+debugger
+    return true if request
+    false
   end
 
   def on?(env)
