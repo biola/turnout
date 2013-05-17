@@ -122,12 +122,12 @@ class Rack::Turnout
 
   def json_content
     if settings['json_return']
-      content = settings['json_return']
+      content = JSON.parse(settings['json_return'])
     else
-      content = File.open(json_maintenance_page, 'rb').read
+      content = JSON.parse(File.open(json_maintenance_page, 'rb').read)
     end
 
-    content
+    content.to_json
   end
 
 end
