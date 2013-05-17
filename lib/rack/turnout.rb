@@ -13,13 +13,22 @@ class Rack::Turnout
     reload_settings
 
     if on?(env)
-      [ 503, { 'Content-Type' => 'text/html', 'Content-Length' => content_length }, [content] ]
+      if json?(env)
+        [ 200, { 'Content-Type' => 'application/json', 'Content-Length' => content_length(json_content) }, [json_content] ]
+      else
+        [ 503, { 'Content-Type' => 'text/html', 'Content-Length' => content_length(content) }, [content] ]
+      end
     else
       @app.call(env)
     end
   end
 
   protected
+
+  def json?(env)
+    request = Rack::Request.new(env)
+    return false if 
+  end
 
   def on?(env)
     request = Rack::Request.new(env)
@@ -83,8 +92,20 @@ class Rack::Turnout
     @default_maintenance_page ||= File.expand_path('../../../public/maintenance.html', __FILE__)
   end
 
-  def content_length
-    content.size.to_s
+  def json_maintenance_page
+    File.exists?(json_user_maintenance_page) ? user_json_maintenance_page : default_json_maintenance_page
+  end
+
+  def user_json_maintenance_page
+    @user_json_maintenance_page ||= app_root.join('public', 'maintenance.json')
+  end
+
+  def default_json_maintenance_page
+    @default_json_maintenance_page ||= File.expand_path('../../../public/maintenance.json', __FILE__)
+  end
+
+  def content_length(blob)
+    blob.size.to_s
   end
 
   def content
@@ -98,4 +119,15 @@ class Rack::Turnout
 
     content
   end
+
+  def json_content
+    if settings['json_return']
+      content = setting['json_return']
+    else
+      content = File.open(json_maintenance_page, 'rb').read
+    end
+
+    content
+  end
+
 end
