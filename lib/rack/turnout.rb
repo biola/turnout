@@ -26,7 +26,7 @@ class Rack::Turnout
   protected
 
   def json?(env)
-    return true if settings['json_for_all_requests']
+    return true if settings['json_response']
     false
   end
 
@@ -121,13 +121,12 @@ class Rack::Turnout
   end
 
   def json_content
-    if settings['json_return']
-      content = JSON.parse(settings['json_return'])
-    else
-      content = JSON.parse(File.open(json_maintenance_page, 'rb').read)
-    end
+    content = JSON.parse(File.open(json_maintenance_page, 'rb').read).to_json
 
-    content.to_json
+    reason = settings['json_reason'] || 'Down for Maintenance'
+    content = content.gsub('<reason>', reason)
+    
+    content
   end
 
 end

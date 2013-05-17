@@ -15,6 +15,22 @@ namespace :maintenance do
     puts "Run `rake maintenance:end` to stop maintenance mode"
   end
 
+  desc 'Enable the maintenance mode with JSON return ("reason", "allowed_paths" and "allowed_ips" can be passed as environment variables) reason should be valid JSON'
+  task :start_json do |t, args|
+    settings = {
+      'json_reason' => ENV['reason'],
+      'allowed_paths' => split_paths(ENV['allowed_paths']),
+      'allowed_ips' => split_ips(ENV['allowed_ips']),
+      'json_response' => true
+    }
+
+    file = File.open settings_file, 'w'
+    file.write settings.to_yaml
+    file.close
+    puts "Created #{settings_file}"
+    puts "Run `rake maintenance:end` to stop json maintenance mode"
+  end
+
   desc 'Disable the maintenance mode page'
   task :end do
     File.delete settings_file
