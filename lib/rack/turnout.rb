@@ -2,6 +2,7 @@ require 'rack'
 require 'yaml'
 require 'ipaddr'
 require 'nokogiri'
+require 'json'
 
 class Rack::Turnout
   def initialize(app, config={})

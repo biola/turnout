@@ -57,5 +57,22 @@ describe 'Rack::Turnout' do
       subject { get '/any_path' }
       its(:body) { should match 'I broke it' }
     end
+
+    context 'with json_response on' do
+      let(:settings) { { 'json_response' => true } }
+
+      describe 'request with default settings' do
+        subject { get '/any_path' }
+        its(:status) { should eql 200 }
+        its(:content_type) { should eql 'application/json' }
+        its(:body) { should match '{"warning":"Down for Maintenance"}' }
+      end
+      
+      describe 'request with user supplied reason' do
+        let(:settings) { { 'json_response' => true, 'json_reason' => 'because I said so' } }
+        subject { get '/any_path' }        
+        its(:body) { should match '{"warning":"because I said so"}' }
+      end
+    end
   end
 end
