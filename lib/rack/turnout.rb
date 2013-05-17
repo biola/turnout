@@ -93,7 +93,7 @@ class Rack::Turnout
   end
 
   def json_maintenance_page
-    File.exists?(json_user_maintenance_page) ? user_json_maintenance_page : default_json_maintenance_page
+    File.exists?(user_json_maintenance_page) ? user_json_maintenance_page : default_json_maintenance_page
   end
 
   def user_json_maintenance_page
