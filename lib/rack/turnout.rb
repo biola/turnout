@@ -26,10 +26,7 @@ class Rack::Turnout
   protected
 
   def json?(env)
-    request = Rack::Request.new(env)
     return true if settings['json_for_all_requests']
-debugger
-    return true if request
     false
   end
 
@@ -125,7 +122,7 @@ debugger
 
   def json_content
     if settings['json_return']
-      content = setting['json_return']
+      content = settings['json_return']
     else
       content = File.open(json_maintenance_page, 'rb').read
     end
