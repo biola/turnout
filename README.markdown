@@ -82,7 +82,7 @@ A [default maintenance page](https://github.com/biola/turnout/blob/master/public
 Tips
 ====
 
-There is no `denied_paths` feature because turnout denies everyhing by default.
+There is no `denied_paths` feature because turnout denies everything by default.
 However you can achieve the same sort of functionality by using
 [negative lookaheads](http://www.regular-expressions.info/lookaround.html) with the `allowed_paths` setting, like so:
 
