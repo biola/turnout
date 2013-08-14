@@ -33,18 +33,21 @@ class Rack::Turnout
   end
 
   def path_allowed?
-    (settings['allowed_paths'] || []).each do |allowed_path|
-      return true if request.path =~ Regexp.new(allowed_path)
+    (settings['allowed_paths'] || []).any? do |allowed_path|
+      request.path =~ Regexp.new(allowed_path)
     end
-    false
   end
 
   def ip_allowed?
-    ip = IPAddr.new(request.ip.to_s)
-    (settings['allowed_ips'] || []).each do |allowed_ip|
-      return true if IPAddr.new(allowed_ip).include? ip
+    begin
+      ip = IPAddr.new(request.ip.to_s)
+    rescue ArgumentError
+      return false
     end
-    false
+
+    (settings['allowed_ips'] || []).any? do |allowed_ip|
+      IPAddr.new(allowed_ip).include? ip
+    end
   end
 
   def reload_settings
