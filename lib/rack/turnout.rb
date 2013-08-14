@@ -10,9 +10,10 @@ class Rack::Turnout
   end
 
   def call(env)
+    self.request = Rack::Request.new(env)
     reload_settings
 
-    if on?(env)
+    if on?
       [ 503, { 'Content-Type' => 'text/html', 'Content-Length' => content_length }, [content] ]
     else
       @app.call(env)
@@ -21,23 +22,25 @@ class Rack::Turnout
 
   protected
 
-  def on?(env)
-    request = Rack::Request.new(env)
+  attr_accessor :request
 
-    return false if path_allowed?(request.path)
-    return false if ip_allowed?(request.ip)
-    maintenance_file_exists?
+  def on?
+    maintenance_file_exists? && !request_allowed?
   end
 
-  def path_allowed?(path)
+  def request_allowed?
+    path_allowed? || ip_allowed?
+  end
+
+  def path_allowed?
     (settings['allowed_paths'] || []).each do |allowed_path|
-      return true if path =~ Regexp.new(allowed_path)
+      return true if request.path =~ Regexp.new(allowed_path)
     end
     false
   end
 
-  def ip_allowed?(ip)
-    ip = IPAddr.new(ip) unless ip.is_a? IPAddr
+  def ip_allowed?
+    ip = IPAddr.new(request.ip.to_s)
     (settings['allowed_ips'] || []).each do |allowed_ip|
       return true if IPAddr.new(allowed_ip).include? ip
     end
