@@ -61,6 +61,10 @@ or
 
     rake maintenance:start reason="Someone told me I should type <code>sudo rm -rf /</code>" allowed_paths="^/help,^/contact_us" allowed_ips="127.0.0.1,192.168.0.0/24"
 
+or
+
+    rake maintenance:start_json
+
 Notes
 -----
 * The `reason` parameter can contain HTML
@@ -68,6 +72,11 @@ Notes
 * All `allowed_paths` are treated as regular expressions.
 * If you need to use a comma in an `allowed_paths` regular expression just escape it with a backslash: `\,`.
 * IP ranges can be given to `allowed_ips` using [CIDR notation](http://en.wikipedia.org/wiki/CIDR_notation).
+
+* Start_json allows for a reason, allowed_paths, and allowed_ips, it just returns a json object.
+* The `reason` parameter for start_json should be just plain text.
+
+
 
 Deactivation
 ============
@@ -78,6 +87,8 @@ Customization
 =============
 
 A [default maintenance page](https://github.com/biola/turnout/blob/master/public/maintenance.html) is provided, but you can create your own `public/maintenance.html` instead. If you provide a `reason` to the rake task, Turnout will use [Nokogiri](http://nokogiri.org) to parse the `maintenance.html` file and attempt to find a tag with `id="reason"`. It will replace the `inner_html` of the tag with the reason you provided. So be sure your `maintenance.html` file can be parsed as HTML.
+
+A default json_maintenance page is provided, but you can create your own `public/maintenance.json` instead. If you provide a `reason` to the rake task, Turnout will JSON.parse the `maintenance.json` file and then replace `<reason>` in your json with the reason provided. So be sure your `maintenance.json` file can be parse as JSON.
 
 Tips
 ====
@@ -107,3 +118,21 @@ Example maintenance.yml File
     allowed_ips:
     - 127.0.0.1
     - 192.168.0.0/24
+<<<<<<< HEAD
+
+
+Example maintenance.yml File for json returns
+---------------------------------------------
+
+    ---
+    json_reason: There's a snake in my boot
+    json_response: true
+    allowed_paths:
+    - ^/help
+    - ^/contact_us
+    allowed_ips:
+    - 127.0.0.1
+    - 192.168.0.0/24
+        
+=======
+>>>>>>> upstream/master

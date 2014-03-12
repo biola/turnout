@@ -2,6 +2,7 @@ require 'rack'
 require 'yaml'
 require 'ipaddr'
 require 'nokogiri'
+require 'json'
 
 class Rack::Turnout
   def initialize(app, config={})
@@ -14,7 +15,11 @@ class Rack::Turnout
     reload_settings
 
     if on?
-      [ 503, { 'Content-Type' => 'text/html', 'Content-Length' => content_length }, [content] ]
+      if json?
+        [ 503, { 'Content-Type' => 'application/json', 'Content-Length' => content_length(json_content) }, [json_content] ]
+      else
+        [ 503, { 'Content-Type' => 'text/html', 'Content-Length' => content_length(content) }, [content] ]
+      end
     else
       @app.call(env)
     end
@@ -23,6 +28,11 @@ class Rack::Turnout
   protected
 
   attr_accessor :request
+
+  def json?
+    return true if settings['json_response']
+    false
+  end
 
   def on?
     maintenance_file_exists? && !request_allowed?
@@ -33,8 +43,14 @@ class Rack::Turnout
   end
 
   def path_allowed?
-    (settings['allowed_paths'] || []).any? do |allowed_path|
-      request.path =~ Regexp.new(allowed_path)
+    if settings['disallowed_paths']
+      (settings['disallowed_paths']).any? do |disallowed_path|
+        request.path !~ Regexp.new(disallowed_path)
+      end
+    else
+      (settings['allowed_paths'] || []).any? do |allowed_path|
+        request.path =~ Regexp.new(allowed_path)
+      end
     end
   end
 
@@ -89,8 +105,20 @@ class Rack::Turnout
     @default_maintenance_page ||= File.expand_path('../../../public/maintenance.html', __FILE__)
   end
 
-  def content_length
-    content.size.to_s
+  def json_maintenance_page
+    File.exists?(user_json_maintenance_page) ? user_json_maintenance_page : default_json_maintenance_page
+  end
+
+  def user_json_maintenance_page
+    @user_json_maintenance_page ||= app_root.join('public', 'maintenance.json')
+  end
+
+  def default_json_maintenance_page
+    @default_json_maintenance_page ||= File.expand_path('../../../public/maintenance.json', __FILE__)
+  end
+
+  def content_length(blob)
+    blob.size.to_s
   end
 
   def content
@@ -104,4 +132,14 @@ class Rack::Turnout
 
     content
   end
+
+  def json_content
+    content = JSON.parse(File.open(json_maintenance_page, 'rb').read).to_json
+
+    reason = settings['json_reason'] || 'Down for Maintenance'
+    content = content.gsub('<reason>', reason)
+    
+    content
+  end
+
 end
