@@ -4,7 +4,8 @@ namespace :maintenance do
     settings = {
       'reason' => ENV['reason'],
       'allowed_paths' => split_paths(ENV['allowed_paths']),
-      'allowed_ips' => split_ips(ENV['allowed_ips'])
+      'allowed_ips' => split_ips(ENV['allowed_ips']),
+      'disallowed_paths' => split_paths(ENV['disallowed_paths'])
     }
 
     file = File.open settings_file, 'w'
@@ -21,7 +22,8 @@ namespace :maintenance do
       'json_reason' => ENV['reason'],
       'allowed_paths' => split_paths(ENV['allowed_paths']),
       'allowed_ips' => split_ips(ENV['allowed_ips']),
-      'json_response' => true
+      'json_response' => true,
+      'disallowed_paths' => split_paths(ENV['disallowed_paths'])
     }
 
     file = File.open settings_file, 'w'

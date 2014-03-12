@@ -11,11 +11,12 @@ class Rack::Turnout
   end
 
   def call(env)
+    self.request = Rack::Request.new(env)
     reload_settings
 
-    if on?(env)
-      if json?(env)
-        [ 200, { 'Content-Type' => 'application/json', 'Content-Length' => content_length(json_content) }, [json_content] ]
+    if on?
+      if json?
+        [ 503, { 'Content-Type' => 'application/json', 'Content-Length' => content_length(json_content) }, [json_content] ]
       else
         [ 503, { 'Content-Type' => 'text/html', 'Content-Length' => content_length(content) }, [content] ]
       end
@@ -26,32 +27,43 @@ class Rack::Turnout
 
   protected
 
-  def json?(env)
+  attr_accessor :request
+
+  def json?
     return true if settings['json_response']
     false
   end
 
-  def on?(env)
-    request = Rack::Request.new(env)
-
-    return false if path_allowed?(request.path)
-    return false if ip_allowed?(request.ip)
-    maintenance_file_exists?
+  def on?
+    maintenance_file_exists? && !request_allowed?
   end
 
-  def path_allowed?(path)
-    (settings['allowed_paths'] || []).each do |allowed_path|
-      return true if path =~ Regexp.new(allowed_path)
-    end
-    false
+  def request_allowed?
+    path_allowed? || ip_allowed?
   end
 
-  def ip_allowed?(ip)
-    ip = IPAddr.new(ip) unless ip.is_a? IPAddr
-    (settings['allowed_ips'] || []).each do |allowed_ip|
-      return true if IPAddr.new(allowed_ip).include? ip
+  def path_allowed?
+    if settings['disallowed_paths']
+      (settings['disallowed_paths']).any? do |disallowed_path|
+        request.path !~ Regexp.new(disallowed_path)
+      end
+    else
+      (settings['allowed_paths'] || []).any? do |allowed_path|
+        request.path =~ Regexp.new(allowed_path)
+      end
     end
-    false
+  end
+
+  def ip_allowed?
+    begin
+      ip = IPAddr.new(request.ip.to_s)
+    rescue ArgumentError
+      return false
+    end
+
+    (settings['allowed_ips'] || []).any? do |allowed_ip|
+      IPAddr.new(allowed_ip).include? ip
+    end
   end
 
   def reload_settings

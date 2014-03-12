@@ -93,7 +93,7 @@ A default json_maintenance page is provided, but you can create your own `public
 Tips
 ====
 
-There is no `denied_paths` feature because turnout denies everyhing by default.
+There is no `denied_paths` feature because turnout denies everything by default.
 However you can achieve the same sort of functionality by using
 [negative lookaheads](http://www.regular-expressions.info/lookaround.html) with the `allowed_paths` setting, like so:
 
@@ -118,6 +118,7 @@ Example maintenance.yml File
     allowed_ips:
     - 127.0.0.1
     - 192.168.0.0/24
+<<<<<<< HEAD
 
 
 Example maintenance.yml File for json returns
@@ -133,3 +134,5 @@ Example maintenance.yml File for json returns
     - 127.0.0.1
     - 192.168.0.0/24
         
+=======
+>>>>>>> upstream/master

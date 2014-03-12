@@ -58,12 +58,28 @@ describe 'Rack::Turnout' do
       its(:body) { should match 'I broke it' }
     end
 
+    context 'with disallowed_path set' do
+      let(:settings) { { 'disallowed_paths' => ['^\/(\bdisallowed_path\b)']} }
+      
+      describe 'request disallowed path' do
+        subject { get '/disallowed_path/abc' }
+        its(:status) { should eql 503 }
+        its(:body) { should_not eql 'Hello World!' }
+      end
+
+      describe 'request to any not-disallowed path' do
+        subject { get '/any_path' }
+        its(:status) { should eql 200 }
+        its(:body) { should eql 'Hello World!' }
+      end
+    end
+
     context 'with json_response on' do
       let(:settings) { { 'json_response' => true } }
 
       describe 'request with default settings' do
         subject { get '/any_path' }
-        its(:status) { should eql 200 }
+        its(:status) { should eql 503 }
         its(:content_type) { should eql 'application/json' }
         its(:body) { should match '{"warning":"Down for Maintenance"}' }
       end
