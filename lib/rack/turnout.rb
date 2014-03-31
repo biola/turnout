@@ -89,46 +89,45 @@ class Rack::Turnout
     @app_maintenance_page ||= app_root.join('public', 'maintenance.html')
   end
 
+  def app_maintenance_page_json
+    @app_maintenance_page_json ||= app_root.join('public', 'maintenance.json')
+  end
+
   def default_maintenance_page
     @default_maintenance_page ||= File.expand_path('../../../public/maintenance.html', __FILE__)
   end
 
-  def app_maintenance_page_json
-    @app_maintenance_page ||= app_root.join('public', 'maintenance.json')
-  end
-
   def default_maintenance_page_json
-    @default_maintenance_page ||= File.expand_path('../../../public/maintenance.json', __FILE__)
+    @default_maintenance_page_json ||= File.expand_path('../../../public/maintenance.json', __FILE__)
   end
 
   def content_length
     content.size.to_s
   end
 
-  def content_type
-    if json?
-      'application/json'
-    else
-      'text/html'
-    end
+  def content
+    switch_type prepare_json_response, prepare_html_response
   end
 
-  def content
-    if json?
-      content = File.open(maintenance_page_json, 'rb').read
-      if settings['reason']
-        json = JSON.parse content
-        json['reason'] = settings['reason']
-        content = json.to_json
-      end
-    else
-      content = File.open(maintenance_page, 'rb').read
+  def prepare_json_response
+    content = File.open(maintenance_page_json, 'rb').read
 
-      if settings['reason']
-        html = Nokogiri::HTML(content)
-        html.at_css('#reason').inner_html = Nokogiri::HTML.fragment(settings['reason'])
-        content = html.to_s
-      end
+    if settings['reason']
+      json = JSON.parse content
+      json['reason'] = settings['reason']
+      content = json.to_json
+    end
+
+    content
+  end
+
+  def prepare_html_response
+    content = File.open(maintenance_page, 'rb').read
+
+    if settings['reason']
+      html = Nokogiri::HTML(content)
+      html.at_css('#reason').inner_html = Nokogiri::HTML.fragment(settings['reason'])
+      content = html.to_s
     end
 
     content
@@ -139,11 +138,19 @@ class Rack::Turnout
     accept != nil && accept.include?('json')
   end
 
+  def content_type
+    switch_type 'application/json', 'text/html'
+  end
+
   def status
+    switch_type 200, 503
+  end
+
+  def switch_type json_result, html_result
     if json?
-      200
+      json_result
     else
-      503
+      html_result
     end
   end
 end
