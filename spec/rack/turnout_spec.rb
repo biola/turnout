@@ -56,6 +56,20 @@ describe 'Rack::Turnout' do
       let(:settings) { { 'reason' => 'I broke it' } }
       subject { get '/any_path' }
       its(:body) { should match 'I broke it' }
+      its(['Content-Type']) { should eql 'text/html' }
+    end
+
+    context 'json' do
+      subject { get '/any_path', nil, { 'HTTP_ACCEPT' => 'application/json' } }
+
+      its(:status) { should eql 200 }
+      its(:body) { should match "{\"reason\":\"The site is temporarily down for maintenance\"}" }
+      its(['Content-Type']) { should eql 'application/json' }
+
+      context 'with a reason set' do
+        let(:settings) { { 'reason' => 'I broke it' } }
+        its(:body) { should match "{\"reason\":\"I broke it\"}" }
+      end
     end
   end
 end

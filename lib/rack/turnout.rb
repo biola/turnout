@@ -14,7 +14,7 @@ class Rack::Turnout
     reload_settings
 
     if on?
-      [ 503, { 'Content-Type' => 'text/html', 'Content-Length' => content_length }, [content] ]
+      [ status, { 'Content-Type' => content_type, 'Content-Length' => content_length }, [content] ]
     else
       @app.call(env)
     end
@@ -81,6 +81,10 @@ class Rack::Turnout
     File.exists?(app_maintenance_page) ? app_maintenance_page : default_maintenance_page
   end
 
+  def maintenance_page_json
+    File.exists?(app_maintenance_page_json) ? app_maintenance_page_json : default_maintenance_page_json
+  end
+
   def app_maintenance_page
     @app_maintenance_page ||= app_root.join('public', 'maintenance.html')
   end
@@ -89,19 +93,57 @@ class Rack::Turnout
     @default_maintenance_page ||= File.expand_path('../../../public/maintenance.html', __FILE__)
   end
 
+  def app_maintenance_page_json
+    @app_maintenance_page ||= app_root.join('public', 'maintenance.json')
+  end
+
+  def default_maintenance_page_json
+    @default_maintenance_page ||= File.expand_path('../../../public/maintenance.json', __FILE__)
+  end
+
   def content_length
     content.size.to_s
   end
 
-  def content
-    content = File.open(maintenance_page, 'rb').read
+  def content_type
+    if json?
+      'application/json'
+    else
+      'text/html'
+    end
+  end
 
-    if settings['reason']
-      html = Nokogiri::HTML(content)
-      html.at_css('#reason').inner_html = Nokogiri::HTML.fragment(settings['reason'])
-      content = html.to_s
+  def content
+    if json?
+      content = File.open(maintenance_page_json, 'rb').read
+      if settings['reason']
+        json = JSON.parse content
+        json['reason'] = settings['reason']
+        content = json.to_json
+      end
+    else
+      content = File.open(maintenance_page, 'rb').read
+
+      if settings['reason']
+        html = Nokogiri::HTML(content)
+        html.at_css('#reason').inner_html = Nokogiri::HTML.fragment(settings['reason'])
+        content = html.to_s
+      end
     end
 
     content
+  end
+
+  def json?
+    accept = self.request.env['HTTP_ACCEPT']
+    accept != nil && accept.include?('json')
+  end
+
+  def status
+    if json?
+      200
+    else
+      503
+    end
   end
 end
