@@ -30,6 +30,15 @@ describe 'Rack::Turnout' do
       end
     end
 
+    context 'with response_code set' do
+      let(:settings) { { "response_code" => '200' } }
+
+      describe "request to any path" do
+        subject { get '/any_path' }
+        its(:status) { should eql 200 }
+      end
+    end
+
     context 'with allowed_ips set' do
       let(:settings) { { 'allowed_ips' => ['10.0.0.42', '192.168.1.0/24'] } }
 

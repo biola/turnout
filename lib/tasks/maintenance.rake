@@ -4,7 +4,8 @@ namespace :maintenance do
     settings = {
       'reason' => ENV['reason'],
       'allowed_paths' => split_paths(ENV['allowed_paths']),
-      'allowed_ips' => split_ips(ENV['allowed_ips'])
+      'allowed_ips' => split_ips(ENV['allowed_ips']),
+      'response_code' => ENV['response_code']
     }
 
     file = File.open settings_file, 'w'
