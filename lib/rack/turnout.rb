@@ -14,7 +14,7 @@ class Rack::Turnout
     reload_settings
 
     if on?
-      [ 503, { 'Content-Type' => 'text/html', 'Content-Length' => content_length }, [content] ]
+      [ response_code, { 'Content-Type' => 'text/html', 'Content-Length' => content_length }, [content] ]
     else
       @app.call(env)
     end
@@ -103,5 +103,9 @@ class Rack::Turnout
     end
 
     content
+  end
+
+  def response_code
+    settings['response_code'] || 503
   end
 end
