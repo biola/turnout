@@ -14,7 +14,7 @@ class Rack::Turnout
     reload_settings
 
     if on?
-      [ status, { 'Content-Type' => content_type, 'Content-Length' => content_length }, [content] ]
+      [ 503, { 'Content-Type' => content_type, 'Content-Length' => content_length }, [content] ]
     else
       @app.call(env)
     end
@@ -140,10 +140,6 @@ class Rack::Turnout
 
   def content_type
     switch_type 'application/json', 'text/html'
-  end
-
-  def status
-    switch_type 200, 503
   end
 
   def switch_type json_result, html_result

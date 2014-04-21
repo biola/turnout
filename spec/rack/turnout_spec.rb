@@ -62,7 +62,7 @@ describe 'Rack::Turnout' do
     context 'json' do
       subject { get '/any_path', nil, { 'HTTP_ACCEPT' => 'application/json' } }
 
-      its(:status) { should eql 200 }
+      its(:status) { should eql 503 }
       its(:body) { should match "{\"reason\":\"The site is temporarily down for maintenance\"}" }
       its(['Content-Type']) { should eql 'application/json' }
 
