@@ -8,6 +8,7 @@ namespace :maintenance do
       'response_code' => ENV['response_code']
     }
 
+    Dir.mkdir 'tmp' unless Dir.exists? 'tmp'
     file = File.open settings_file, 'w'
     file.write settings.to_yaml
     file.close
