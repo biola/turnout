@@ -14,7 +14,7 @@ class Rack::Turnout
     reload_settings
 
     if on?
-      [ response_code, { 'Content-Type' => 'text/html', 'Content-Length' => content_length }, [content] ]
+      [ response_code, { 'Content-Type' => content_type, 'Content-Length' => content_length }, [content] ]
     else
       @app.call(env)
     end
@@ -81,12 +81,24 @@ class Rack::Turnout
     File.exists?(app_maintenance_page) ? app_maintenance_page : default_maintenance_page
   end
 
+  def maintenance_page_json
+    File.exists?(app_maintenance_page_json) ? app_maintenance_page_json : default_maintenance_page_json
+  end
+
   def app_maintenance_page
     @app_maintenance_page ||= app_root.join('public', 'maintenance.html')
   end
 
+  def app_maintenance_page_json
+    @app_maintenance_page_json ||= app_root.join('public', 'maintenance.json')
+  end
+
   def default_maintenance_page
     @default_maintenance_page ||= File.expand_path('../../../public/maintenance.html', __FILE__)
+  end
+
+  def default_maintenance_page_json
+    @default_maintenance_page_json ||= File.expand_path('../../../public/maintenance.json', __FILE__)
   end
 
   def content_length
@@ -94,6 +106,22 @@ class Rack::Turnout
   end
 
   def content
+    switch_type prepare_json_response, prepare_html_response
+  end
+
+  def prepare_json_response
+    content = File.open(maintenance_page_json, 'rb').read
+
+    if settings['reason']
+      json = JSON.parse content
+      json['reason'] = settings['reason']
+      content = json.to_json
+    end
+
+    content
+  end
+
+  def prepare_html_response
     content = File.open(maintenance_page, 'rb').read
 
     if settings['reason']
@@ -107,5 +135,22 @@ class Rack::Turnout
 
   def response_code
     settings['response_code'] || 503
+  end
+
+  def json?
+    accept = self.request.env['HTTP_ACCEPT']
+    accept != nil && accept.include?('json')
+  end
+
+  def content_type
+    switch_type 'application/json', 'text/html'
+  end
+
+  def switch_type json_result, html_result
+    if json?
+      json_result
+    else
+      html_result
+    end
   end
 end
