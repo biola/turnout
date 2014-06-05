@@ -2,11 +2,17 @@ require 'rack'
 require 'yaml'
 require 'ipaddr'
 require 'nokogiri'
+require 'turnout'
 
 class Rack::Turnout
-  def initialize(app, config={})
+  def initialize(app, settings={})
     @app = app
-    @config = config
+
+    Turnout.config.update settings
+
+    if settings[:app_root].nil? && app.respond_to?(:app_root)
+      Turnout.config.app_root = app.app_root
+    end
   end
 
   def call(env)
@@ -63,14 +69,8 @@ class Rack::Turnout
     end
   end
 
-  def app_root
-    @app_root ||= Pathname.new(
-      @config[:app_root] || @app.respond_to?(:root)? @app.root.to_s : '.'
-    )
-  end
-
   def settings_file
-    app_root.join('tmp', 'maintenance.yml')
+    Turnout.config.app_root.join('tmp', 'maintenance.yml')
   end
 
   def maintenance_file_exists?
@@ -86,11 +86,11 @@ class Rack::Turnout
   end
 
   def app_maintenance_page
-    @app_maintenance_page ||= app_root.join('public', 'maintenance.html')
+    @app_maintenance_page ||= Turnout.config.app_root.join('public', 'maintenance.html')
   end
 
   def app_maintenance_page_json
-    @app_maintenance_page_json ||= app_root.join('public', 'maintenance.json')
+    @app_maintenance_page_json ||= Turnout.config.app_root.join('public', 'maintenance.json')
   end
 
   def default_maintenance_page
