@@ -8,7 +8,9 @@ namespace :maintenance do
       'response_code' => ENV['response_code']
     }
 
-    Dir.mkdir 'tmp' unless Dir.exists? 'tmp'
+    Turnout.config.update dir: ENV['dir'] if ENV['dir'].present?
+
+    Dir.mkdir Turnout.config.dir unless Dir.exists? Turnout.config.dir
     file = File.open settings_file, 'w'
     file.write settings.to_yaml
     file.close
@@ -19,13 +21,15 @@ namespace :maintenance do
 
   desc 'Disable the maintenance mode page'
   task :end do
+    Turnout.config.update dir: ENV['dir'] if ENV['dir'].present?
+
     File.delete settings_file
 
     puts "Deleted #{settings_file}"
   end
 
   def settings_file
-    Rails.root.join('tmp', 'maintenance.yml')
+    Rails.root.join(Turnout.config.dir, 'maintenance.yml')
   end
 
   def split_paths(paths_string)

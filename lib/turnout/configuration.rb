@@ -1,6 +1,6 @@
 module Turnout
   class Configuration
-    SETTINGS = [:app_root]
+    SETTINGS = [:app_root, :dir]
 
     SETTINGS.each do |setting|
       attr_accessor setting
@@ -8,10 +8,15 @@ module Turnout
 
     def initialize
       @app_root = '.'
+      @dir = 'tmp'
     end
 
     def app_root
       Pathname.new(@app_root.to_s)
+    end
+
+    def dir
+      @dir
     end
 
     def update(settings_hash)

@@ -70,7 +70,7 @@ class Rack::Turnout
   end
 
   def settings_file
-    Turnout.config.app_root.join('tmp', 'maintenance.yml')
+    Turnout.config.app_root.join(Turnout.config.dir, 'maintenance.yml')
   end
 
   def maintenance_file_exists?
