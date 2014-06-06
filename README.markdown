@@ -96,6 +96,8 @@ So if you want to get the maintenance page up or down in a hury `touch tmp/maint
 
 Turnout will attempt to parse the `maintenance.yml` file looking for `reason` and `allowed_ip` settings. The file is not cached so you can change these values manually or just rerun the `rake maintenance:start` command.
 
+The location of `maintenance.yml` can be configured using `Turnout.config.update dir: 'your_dir'`.  In Rails, you can drop this in `./config/initializers/turnout_config.rb`.  Using rake activation this would be passed as environment variable `dir`: `dir=tmp/maint rake maintenance:start`.
+
 Example maintenance.yml File
 ----------------------------
 
