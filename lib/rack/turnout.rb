@@ -5,22 +5,22 @@ require 'nokogiri'
 require 'turnout'
 
 class Rack::Turnout
-  def initialize(app, settings={})
+  def initialize(app, config={})
     @app = app
 
-    Turnout.config.update settings
+    Turnout.config.update config
 
-    if settings[:app_root].nil? && app.respond_to?(:app_root)
+    if config[:app_root].nil? && app.respond_to?(:app_root)
       Turnout.config.app_root = app.app_root
     end
   end
 
   def call(env)
     self.request = Rack::Request.new(env)
-    reload_settings
+    reload_maintenance_file!
 
     if on?
-      [ response_code, { 'Content-Type' => content_type, 'Content-Length' => content_length }, [content] ]
+      [ settings.response_code, { 'Content-Type' => content_type, 'Content-Length' => content_length }, [content] ]
     else
       @app.call(env)
     end
@@ -30,8 +30,21 @@ class Rack::Turnout
 
   attr_accessor :request
 
+  def maintenance_file
+    @maintenance_file ||= (
+      file = Turnout.config.app_root.join(Turnout.config.dir, 'maintenance.yml')
+      Turnout::MaintenanceFile.new file
+    )
+  end
+  alias :settings :maintenance_file
+
+  def reload_maintenance_file!
+    # Clear memoization
+    @maintenance_file = nil
+  end
+
   def on?
-    maintenance_file_exists? && !request_allowed?
+    maintenance_file.exists? && !request_allowed?
   end
 
   def request_allowed?
@@ -39,7 +52,7 @@ class Rack::Turnout
   end
 
   def path_allowed?
-    (settings['allowed_paths'] || []).any? do |allowed_path|
+    settings.allowed_paths.any? do |allowed_path|
       request.path =~ Regexp.new(allowed_path)
     end
   end
@@ -51,30 +64,9 @@ class Rack::Turnout
       return false
     end
 
-    (settings['allowed_ips'] || []).any? do |allowed_ip|
+    settings.allowed_ips.any? do |allowed_ip|
       IPAddr.new(allowed_ip).include? ip
     end
-  end
-
-  def reload_settings
-    @settings = nil
-    settings
-  end
-
-  def settings
-    @settings ||= if File.exists? settings_file
-      YAML::load(File.open(settings_file)) || {}
-    else
-      {}
-    end
-  end
-
-  def settings_file
-    Turnout.config.app_root.join(Turnout.config.dir, 'maintenance.yml')
-  end
-
-  def maintenance_file_exists?
-    File.exists? settings_file
   end
 
   def maintenance_page
@@ -112,9 +104,9 @@ class Rack::Turnout
   def prepare_json_response
     content = File.open(maintenance_page_json, 'rb').read
 
-    if settings['reason']
+    if settings.reason
       json = JSON.parse content
-      json['reason'] = settings['reason']
+      json['reason'] = settings.reason
       content = json.to_json
     end
 
@@ -124,17 +116,13 @@ class Rack::Turnout
   def prepare_html_response
     content = File.open(maintenance_page, 'rb').read
 
-    if settings['reason']
+    if settings.reason
       html = Nokogiri::HTML(content)
-      html.at_css('#reason').inner_html = Nokogiri::HTML.fragment(settings['reason'])
+      html.at_css('#reason').inner_html = Nokogiri::HTML.fragment(settings.reason)
       content = html.to_s
     end
 
     content
-  end
-
-  def response_code
-    settings['response_code'] || 503
   end
 
   def json?

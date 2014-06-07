@@ -1,3 +1,5 @@
+require 'turnout'
+
 namespace :maintenance do
   desc 'Enable the maintenance mode page ("reason", "allowed_paths" and "allowed_ips" can be passed as environment variables)'
   task :start do |t, args|
@@ -29,7 +31,7 @@ namespace :maintenance do
   end
 
   def settings_file
-    Rails.root.join(Turnout.config.dir, 'maintenance.yml')
+    Turnout.config.app_root.join(Turnout.config.dir, 'maintenance.yml')
   end
 
   def split_paths(paths_string)

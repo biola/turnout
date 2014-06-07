@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'Rack::Turnout' do
   let(:endpoint) { TestApp.new }
-  let(:app) { Rack::Turnout.new(endpoint).tap{|t| t.stub(:settings).and_return(settings)} }
+  let(:app) { Rack::Turnout.new(endpoint) }
   let(:settings) { {} }
 
   context 'without a maintenance.yml file' do
@@ -12,7 +12,7 @@ describe 'Rack::Turnout' do
   end
 
   context 'with a maintenance.yml file' do
-    before { app.stub(:maintenance_file_exists?).and_return(true) }
+    before { Turnout::MaintenanceFile.any_instance.stub exists?: true, settings: settings }
 
     context 'with allowed_paths set' do
       let(:settings) { { 'allowed_paths' => ['/allowed_path'] } }

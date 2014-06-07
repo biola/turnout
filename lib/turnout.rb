@@ -1,5 +1,6 @@
 module Turnout
   require 'turnout/configuration'
+  require 'turnout/maintenance_file'
   require 'turnout/engine' if defined? Rails
 
   def self.configure
