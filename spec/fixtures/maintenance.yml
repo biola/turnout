@@ -1,5 +1,5 @@
 ---
 reason: Oopsie!
-allowed_paths: [/uuddlrlrba]
-allowed_ips: [42.42.42.42]
+allowed_paths: [/uuddlrlrba.*]
+allowed_ips: [42.42.42.0/24]
 response_code: 418

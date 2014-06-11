@@ -19,8 +19,8 @@ describe Turnout::MaintenanceFile do
 
     its(:exists?) { should be_true }
     its(:reason) { should eql 'Oopsie!'  }
-    its(:allowed_paths) { should eql ['/uuddlrlrba'] }
-    its(:allowed_ips) { should eql ['42.42.42.42'] }
+    its(:allowed_paths) { should eql ['/uuddlrlrba.*'] }
+    its(:allowed_ips) { should eql ['42.42.42.0/24'] }
     its(:response_code) { should eql 418 }
   end
 end
