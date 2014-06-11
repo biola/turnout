@@ -1,6 +1,6 @@
 Turnout [![Build Status](https://travis-ci.org/biola/turnout.png?branch=master)](https://travis-ci.org/biola/turnout)
 =======
-Turnout is a [Ruby on Rails](http://rubyonrails.org) engine with a [Rack](http://rack.rubyforge.org/) component that allows you to put your Rails app in maintenance mode.
+Turnout is [Rack](http://rack.rubyforge.org/) middleware with a [Ruby on Rails](http://rubyonrails.org) engine that allows you to easily put your app in maintenance mode.
 
 Features
 ========
@@ -11,11 +11,12 @@ Features
 * Allow certain paths to be accessible during maintenance
 * Easily override the default maintenance.html file with your own
 * Simple [YAML](http://yaml.org) based config file for easy activation, deactivation and configuration without the rake commands
-* Supports Rails 2.3 - 3.0 and Ruby 1.8.7 - 1.9.3
+* SUpport for multiple maintenance page formats. Current [HTML](http://en.wikipedia.org/wiki/HTML) and [JSON](http://en.wikipedia.org/wiki/JSON)
+* Supports Rails, [Sinatra](http://sinatrarb.com) and any other Rack application
 
 Installation
 ============
-Rails 3
+Rails 3+
 -------
 In your `Gemfile` add:
 
@@ -24,20 +25,6 @@ In your `Gemfile` add:
 then run
 
     bundle install
-
-Rails 2.3
----------
-In your `config/environment.rb` file add:
-
-    config.gem 'turnout'
-
-then run
-
-    rake gems:install
-
-then in your `Rakefile` add:
-
-    require 'turnout/rake_tasks'
 
 
 Activation
@@ -74,10 +61,15 @@ Deactivation
 
     rake maintenance:end
 
+Configuration
+=============
+
+TODO
+
 Customization
 =============
 
-A [default maintenance page](https://github.com/biola/turnout/blob/master/public/maintenance.html) is provided, but you can create your own `public/maintenance.html` instead. If you provide a `reason` to the rake task, Turnout will use [Nokogiri](http://nokogiri.org) to parse the `maintenance.html` file and attempt to find a tag with `id="reason"`. It will replace the `inner_html` of the tag with the reason you provided. So be sure your `maintenance.html` file can be parsed as HTML.
+[Default maintenance pages](https://github.com/biola/turnout/blob/master/public/) are provided, but you can create your own `public/maintenance.[html|json]` files instead. If you provide a `reason` to the rake task, Turnout will parse the maintenance page file and attempt to replace a [Liquid](http://liquidmarkup.org/)-style `{{ reason }}` tag with the provided reason. So be sure to include a `{{ reason }}` tag in your `maintenance.html` file.
 
 Tips
 ====
@@ -94,7 +86,7 @@ On every request the Rack app will check to see if `tmp/maintenance.yml` exists.
 
 So if you want to get the maintenance page up or down in a hury `touch tmp/maintenance.yml` and `rm tmp/maintenance.yml` will work.
 
-Turnout will attempt to parse the `maintenance.yml` file looking for `reason` and `allowed_ip` settings. The file is not cached so you can change these values manually or just rerun the `rake maintenance:start` command.
+Turnout will attempt to parse the `maintenance.yml` file looking for `reason` and `allowed_ip` settings. The file is checked on every request so you can change these values manually or just rerun the `rake maintenance:start` command.
 
 The location of `maintenance.yml` can be configured using `Turnout.config.update dir: 'your_dir'`.  In Rails, you can drop this in `./config/initializers/turnout_config.rb`.  Using rake activation this would be passed as environment variable `dir`: `dir=tmp/maint rake maintenance:start`.
 

@@ -11,7 +11,7 @@ module Turnout
     end
 
     def reason
-      settings['reason']
+      (settings['reason'] || Turnout.config.default_reason).to_s
     end
 
     def allowed_paths
@@ -23,7 +23,7 @@ module Turnout
     end
 
     def response_code
-      (settings['response_code'] || 503).to_i
+      (settings['response_code'] || Turnout.config.default_response_code).to_i
     end
 
     private

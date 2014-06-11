@@ -72,12 +72,12 @@ describe 'Rack::Turnout' do
       subject { get '/any_path', nil, { 'HTTP_ACCEPT' => 'application/json' } }
 
       its(:status) { should eql 503 }
-      its(:body) { should match "{\"reason\":\"The site is temporarily down for maintenance\"}" }
+      its(:body) { should match '{"error":"Service Unavailable","message":"' }
       its(['Content-Type']) { should eql 'application/json' }
 
       context 'with a reason set' do
         let(:settings) { { 'reason' => 'I broke it' } }
-        its(:body) { should match "{\"reason\":\"I broke it\"}" }
+        its(:body) { should match '{"error":"Service Unavailable","message":"I broke it"}' }
       end
     end
   end

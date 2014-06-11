@@ -1,1 +1,1 @@
-{"reason":"The site is temporarily down for maintenance"}
+{"error":"Service Unavailable","message":{{ reason }}}

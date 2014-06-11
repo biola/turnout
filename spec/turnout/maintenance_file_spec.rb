@@ -8,7 +8,7 @@ describe Turnout::MaintenanceFile do
     let(:filename) { 'nope' }
 
     its(:exists?) { should be_false }
-    its(:reason) { should be_nil  }
+    its(:reason) { should eql "The site is temporarily down for maintenance.\nPlease check back soon." }
     its(:allowed_paths) { should eql [] }
     its(:allowed_ips) { should eql [] }
     its(:response_code) { should eql 503 }

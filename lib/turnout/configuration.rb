@@ -1,6 +1,6 @@
 module Turnout
   class Configuration
-    SETTINGS = [:app_root, :dir]
+    SETTINGS = [:app_root, :dir, :default_maintenance_page, :default_reason, :default_response_code]
 
     SETTINGS.each do |setting|
       attr_accessor setting
@@ -9,14 +9,13 @@ module Turnout
     def initialize
       @app_root = '.'
       @dir = 'tmp'
+      @default_maintenance_page = Turnout::MaintenancePage::HTML
+      @default_reason = "The site is temporarily down for maintenance.\nPlease check back soon."
+      @default_response_code = 503
     end
 
     def app_root
       Pathname.new(@app_root.to_s)
-    end
-
-    def dir
-      @dir
     end
 
     def update(settings_hash)
