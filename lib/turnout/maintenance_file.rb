@@ -1,3 +1,5 @@
+require 'yaml'
+
 module Turnout
   class MaintenanceFile
     attr_reader :path

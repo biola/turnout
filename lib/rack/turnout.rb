@@ -1,5 +1,4 @@
 require 'rack'
-require 'yaml'
 require 'turnout'
 
 class Rack::Turnout
