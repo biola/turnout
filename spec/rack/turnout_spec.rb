@@ -3,7 +3,6 @@ require 'spec_helper'
 describe 'Rack::Turnout' do
   let(:endpoint) { TestApp.new }
   let(:app) { Rack::Turnout.new(endpoint) }
-  let(:settings) { {} }
 
   context 'without a maintenance.yml file' do
     subject { get '/any_path' }
@@ -12,36 +11,37 @@ describe 'Rack::Turnout' do
   end
 
   context 'with a maintenance.yml file' do
-    before { Turnout::MaintenanceFile.any_instance.stub exists?: true, settings: settings }
+    before { Turnout.config.dir = 'spec/fixtures' }
+    # maintenance.yml:
+    #   reason: Oopsie!
+    #   allowed_paths: [/uuddlrlrba.*]
+    #   allowed_ips:
+    #     - 10.0.0.42
+    #     - 192.168.1.0/24
+    #   response_code: 418
 
     context 'with allowed_paths set' do
-      let(:settings) { { 'allowed_paths' => ['/allowed_path'] } }
-
       describe 'request to allowed path' do
-        subject { get '/allowed_path' }
+        subject { get '/uuddlrlrba' }
         its(:status) { should eql 200 }
         its(:body) { should eql 'Hello World!' }
       end
 
       describe "request to path that isn't allowed" do
         subject { get '/some_other_path' }
-        its(:status) { should eql 503 }
+        its(:status) { should eql 418 }
         its(:body) { should_not eql 'Hello World!' }
       end
     end
 
     context 'with response_code set' do
-      let(:settings) { { "response_code" => '200' } }
-
       describe "request to any path" do
         subject { get '/any_path' }
-        its(:status) { should eql 200 }
+        its(:status) { should eql 418 }
       end
     end
 
     context 'with allowed_ips set' do
-      let(:settings) { { 'allowed_ips' => ['10.0.0.42', '192.168.1.0/24'] } }
-
       describe 'request from allowed IP' do
         subject { get '/any_path', {}, 'REMOTE_ADDR' => '10.0.0.42' }
         its(:status) { should eql 200 }
@@ -56,28 +56,26 @@ describe 'Rack::Turnout' do
 
       describe "request from IP that isn't allowed" do
         subject { get '/any_path', {}, 'REMOTE_ADDR' => '10.0.0.255' }
-        its(:status) { should eql 503 }
+        its(:status) { should eql 418 }
         its(:body) { should_not eql 'Hello World!' }
       end
     end
 
     context 'with a reason set' do
-      let(:settings) { { 'reason' => 'I broke it' } }
       subject { get '/any_path' }
-      its(:body) { should match 'I broke it' }
+      its(:body) { should match 'Oopsie!' }
       its(['Content-Type']) { should eql 'text/html' }
     end
 
     context 'json' do
       subject { get '/any_path', nil, { 'HTTP_ACCEPT' => 'application/json' } }
 
-      its(:status) { should eql 503 }
+      its(:status) { should eql 418 }
       its(:body) { should match '{"error":"Service Unavailable","message":"' }
       its(['Content-Type']) { should eql 'application/json' }
 
       context 'with a reason set' do
-        let(:settings) { { 'reason' => 'I broke it' } }
-        its(:body) { should match '{"error":"Service Unavailable","message":"I broke it"}' }
+        its(:body) { should match '{"error":"Service Unavailable","message":"Oopsie!"}' }
       end
     end
   end

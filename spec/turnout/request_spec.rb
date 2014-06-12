@@ -36,8 +36,8 @@ describe Turnout::Request do
         it { should be_false }
       end
 
-      context 'request from 42.42.42.42' do
-        let(:ip) { '42.42.42.42' }
+      context 'request from 10.0.0.42' do
+        let(:ip) { '10.0.0.42' }
         it { should be_true }
       end
     end
