@@ -28,8 +28,10 @@ module Turnout
       end
     end
 
-    def to_yaml
-      to_h.to_yaml
+    def to_yaml(key_mapper = :to_s)
+      to_h.each_with_object({}) { |(key, val), hash|
+        hash[key.send(key_mapper)] = val
+      }.to_yaml
     end
 
     def write

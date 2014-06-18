@@ -39,11 +39,11 @@ describe Turnout::MaintenanceFile do
       subject { yaml }
 
       its(:to_yaml) { should be_a String }
-      it { expect(yaml.keys).to eql [:reason, :allowed_paths, :allowed_ips, :response_code] }
-      it { expect(yaml[:reason]).to eql 'Oopsie!' }
-      it { expect(yaml[:allowed_paths]).to eql ['/uuddlrlrba.*'] }
-      it { expect(yaml[:allowed_ips]).to eql ['10.0.0.42', '192.168.1.0/24'] }
-      it { expect(yaml[:response_code]).to eql 418 }
+      it { expect(yaml.keys).to eql ['reason', 'allowed_paths', 'allowed_ips', 'response_code'] }
+      it { expect(yaml['reason']).to eql 'Oopsie!' }
+      it { expect(yaml['allowed_paths']).to eql ['/uuddlrlrba.*'] }
+      it { expect(yaml['allowed_ips']).to eql ['10.0.0.42', '192.168.1.0/24'] }
+      it { expect(yaml['response_code']).to eql 418 }
     end
   end
 
