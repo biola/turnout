@@ -55,6 +55,11 @@ module Turnout
     end
     alias :import_env_vars :import
 
+    def self.find
+      path = Turnout.config.app_root.join(Turnout.config.dir, 'maintenance.yml')
+      Turnout::MaintenanceFile.new(path)
+    end
+
     private
 
     def reason=(reason)

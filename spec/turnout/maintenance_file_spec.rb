@@ -92,4 +92,9 @@ describe Turnout::MaintenanceFile do
       its(:response_code) { should eql 418 }
     end
   end
+
+  describe '.find' do
+    subject { Turnout::MaintenanceFile.find }
+    it { should be_a Turnout::MaintenanceFile }
+  end
 end

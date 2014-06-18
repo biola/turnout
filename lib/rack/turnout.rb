@@ -14,7 +14,7 @@ class Rack::Turnout
 
   def call(env)
     request = Turnout::Request.new(env)
-    settings = maintenance_file
+    settings = Turnout::MaintenanceFile.find
 
     if settings.exists? && !request.allowed?(settings)
       page_class = Turnout::MaintenancePage.best_for(env)
@@ -24,12 +24,5 @@ class Rack::Turnout
     else
       @app.call(env)
     end
-  end
-
-  protected
-
-  def maintenance_file
-    file = Turnout.config.app_root.join(Turnout.config.dir, 'maintenance.yml')
-    Turnout::MaintenanceFile.new file
   end
 end
