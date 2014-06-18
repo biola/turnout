@@ -84,7 +84,7 @@ Behind the Scenes
 =================
 On every request the Rack app will check to see if `tmp/maintenance.yml` exists. If the file exists the maintenance page will be shown (unless allowed IPs are given and the requester is in the allowed range).
 
-So if you want to get the maintenance page up or down in a hury `touch tmp/maintenance.yml` and `rm tmp/maintenance.yml` will work.
+So if you want to get the maintenance page up or down in a hurry `touch tmp/maintenance.yml` and `rm tmp/maintenance.yml` will work.
 
 Turnout will attempt to parse the `maintenance.yml` file looking for `reason` and `allowed_ip` settings. The file is checked on every request so you can change these values manually or just rerun the `rake maintenance:start` command.
 
@@ -101,3 +101,4 @@ Example maintenance.yml File
     allowed_ips:
     - 127.0.0.1
     - 192.168.0.0/24
+    response_code: 503
