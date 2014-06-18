@@ -46,13 +46,14 @@ module Turnout
       File.delete(path) if exists?
     end
 
-    def import_env_vars(env_vars)
-      SETTINGS.map(&:to_s).each do |var|
-        self.send(:"#{var}=", env_vars[var]) unless env_vars[var].nil?
+    def import(hash)
+      SETTINGS.map(&:to_s).each do |att|
+        self.send(:"#{att}=", hash[att]) unless hash[att].nil?
       end
 
       true
     end
+    alias :import_env_vars :import
 
     private
 
@@ -88,13 +89,7 @@ module Turnout
     end
 
     def import_yaml
-      yaml = YAML::load(File.open(path)) || {}
-
-      SETTINGS.map(&:to_s).each do |att|
-        self.send(:"#{att}=", yaml[att]) unless yaml[att].nil?
-      end
-
-      true
+      import YAML::load(File.open(path)) || {}
     end
   end
 end
