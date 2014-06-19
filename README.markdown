@@ -127,17 +127,19 @@ On every request the Rack app will check to see if `tmp/maintenance.yml` exists.
 
 So if you want to get the maintenance page up or down in a hurry `touch tmp/maintenance.yml` and `rm tmp/maintenance.yml` will work.
 
-Turnout will attempt to parse the `maintenance.yml` file looking for `reason` and `allowed_ip` settings. The file is checked on every request so you can change these values manually or just rerun the `rake maintenance:start` command.
+Turnout will attempt to parse the `maintenance.yml` file looking for `reason`, `allowed_ip` and other settings. The file is checked on every request so you can change these values manually or just rerun the `rake maintenance:start` command.
 
 Example maintenance.yml File
 ----------------------------
 
-    ---
-    reason: Someone told me I should type <code>sudo rm -rf /</code>
-    allowed_paths:
-    - ^/help
-    - ^/contact_us
-    allowed_ips:
-    - 127.0.0.1
-    - 192.168.0.0/24
-    response_code: 503
+```yaml
+---
+reason: Someone told me I should type <code>sudo rm -rf /</code>
+allowed_paths:
+- ^/help
+- ^/contact_us
+allowed_ips:
+- 127.0.0.1
+- 192.168.0.0/24
+response_code: 503
+```
