@@ -55,9 +55,19 @@ module Turnout
     end
     alias :import_env_vars :import
 
+    # Find the first MaintenanceFile that exists
     def self.find
-      path = Turnout.config.app_root.join(Turnout.config.dir, 'maintenance.yml')
-      Turnout::MaintenanceFile.new(path)
+      path = named_paths.values.find { |path| File.exists? path }
+      self.new(path) if path
+    end
+
+    def self.named(name)
+      path = named_paths[name.to_sym]
+      self.new(path) unless path.nil?
+    end
+
+    def self.default
+      self.new(named_paths.values.first)
     end
 
     private
@@ -95,6 +105,10 @@ module Turnout
 
     def import_yaml
       import YAML::load(File.open(path)) || {}
+    end
+
+    def self.named_paths
+      Turnout.config.named_maintenance_file_paths
     end
   end
 end

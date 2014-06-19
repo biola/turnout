@@ -1,17 +1,27 @@
 require 'spec_helper'
 
 describe Turnout::Configuration do
-  its(:app_root) { should be_a Pathname }
-  its('app_root.to_s') { should eql '.' }
-  its(:dir) { should eq('tmp') }
+  let(:config) { Turnout::Configuration.new }
+  subject { config }
 
   describe '#app_root' do
+    its(:app_root) { should be_a Pathname }
     its('app_root.to_s') { should eql '.' }
     it { expect { subject.app_root = '/tmp' }.to change { subject.app_root }.from(Pathname.new('.')).to Pathname.new('/tmp') }
   end
 
-  describe '#dir' do
-    its(:dir) { should eql 'tmp' }
+  describe '#named_maintenance_file_paths' do
+    subject { config.named_maintenance_file_paths }
+
+    it { should eq(default: 'tmp/maintenance.yml') }
+
+    context 'when a string is given as a key' do
+      before { config.named_maintenance_file_paths = {'new' => 'tmp/new.yml'} }
+
+      it 'should convert the key to a symbol' do
+        should have_key :new
+      end
+    end
   end
 
   describe '#default_maintenance_page' do
@@ -37,9 +47,9 @@ describe Turnout::Configuration do
       it { expect { subject.update(settings) }.to change { subject.app_root.to_s}.from('.').to '/tmp' }
     end
 
-    context 'maintenance dir' do
-      let(:settings) { {dir: 'tmp/main_dir'} }
-      it { expect { subject.update(settings) }.to change { subject.dir.to_s }.from('tmp').to 'tmp/main_dir' }
+    context 'named_maintenance_file_paths' do
+      let(:settings) { {named_maintenance_file_paths: {test: 'tmp/main_dir'}} }
+      it { expect { subject.update(settings) }.to change { subject.named_maintenance_file_paths }.to(test: 'tmp/main_dir') }
     end
   end
 end

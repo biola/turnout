@@ -66,7 +66,7 @@ describe Turnout::MaintenanceFile do
     end
   end
 
-  describe '#import_env_vars' do
+  describe '#import' do
     let(:env_vars) { {} }
     before { maint_file.import_env_vars(env_vars) }
 
@@ -95,6 +95,36 @@ describe Turnout::MaintenanceFile do
 
   describe '.find' do
     subject { Turnout::MaintenanceFile.find }
+
+    context 'when a file exists' do
+      before { Turnout.config.named_maintenance_file_paths = {fixture: 'spec/fixtures/maintenance.yml'} }
+      it { should be_a Turnout::MaintenanceFile }
+    end
+
+    context 'when no file exists' do
+      before { Turnout.config.named_maintenance_file_paths = {nope: 'spec/fixtures/nope.yml'} }
+      it { should be_nil }
+    end
+  end
+
+  describe '.named' do
+    subject { Turnout::MaintenanceFile.named(name) }
+
+    before { Turnout.config.named_maintenance_file_paths = {valid: 'spec/fixtures/nope.yml'} }
+
+    context 'when a valid name' do
+      let(:name) { :valid }
+      it { should be_a Turnout::MaintenanceFile }
+    end
+
+    context 'when an invalid name' do
+      let(:name) { :invalid }
+      it { should be_nil }
+    end
+  end
+
+  describe '.default' do
+    subject { Turnout::MaintenanceFile.default }
     it { should be_a Turnout::MaintenanceFile }
   end
 end

@@ -11,7 +11,7 @@ describe 'Rack::Turnout' do
   end
 
   context 'with a maintenance.yml file' do
-    before { Turnout.config.dir = 'spec/fixtures' }
+    before { Turnout.config.named_maintenance_file_paths = {fixture: 'spec/fixtures/maintenance.yml'} }
     # maintenance.yml:
     #   reason: Oopsie!
     #   allowed_paths: [/uuddlrlrba.*]

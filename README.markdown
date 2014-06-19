@@ -64,7 +64,46 @@ Deactivation
 Configuration
 =============
 
-TODO
+Turnout can be configured in two different ways:
+
+1. __Pass a config hash to the middleware__
+
+    ```ruby
+    use Rack::Turnout,
+      app_root: '/some/path',
+      named_maintenance_file_paths: {app: 'tmp/app.yml', server: '/tmp/server.yml'},
+      default_mainteance_page: Turnout::MaintenancePage::JSON,
+      default_reason: 'Somebody googled Google!',
+      default_response_code: 418
+    ```
+
+2. __Using a config block__
+
+    ```ruby
+    Turonut.configure do |config|
+      config.app_root = '/some/path'
+      config.named_maintenance_file_paths = {app: 'tmp/app.yml', server: '/tmp/server.yml'},
+      config.default_maintenance_page = Turnout::MaintenancePage::JSON
+      config.default_reason = 'Somebody googled Google!'
+      config.default_response_code = 418
+    end
+    ```
+
+__NOTICE:__ Any custom configuration should be loaded not only in the app but in the rake task. This should happen automatically in Rails as the `environment` task is run if it exists. But you may want to create your own `environment` task in non-Rails apps.
+
+Default Configuration
+---------------------
+
+```ruby
+Turnout.configure do |config|
+  config.app_root = '.',
+  config.named_maintenance_file_paths = {default: app_root.join('tmp', 'maintenance.yml').to_s},
+  config.default_maintenance_page = Turnout::MaintenancePage::HTML,
+  config.default_reason = "The site is temporarily down for maintenance.\nPlease check back soon.",
+  config.default_response_code = 503
+end
+}
+```
 
 Customization
 =============
@@ -80,6 +119,8 @@ However you can achieve the same sort of functionality by using
 
     rake maintenance:start allowed_paths="^(?!/your/under/maintenance/path)"
 
+A central `named_maintenance_file_path` can be configured in all your apps such as `/tmp/turnout.yml` so that all apps on a server can be put into mainteance mode at once. You could even configure service based paths such as `/tmp/mongodb_maintenance.yml` so that all apps using MongoDB could be put into maintenance mode.
+
 Behind the Scenes
 =================
 On every request the Rack app will check to see if `tmp/maintenance.yml` exists. If the file exists the maintenance page will be shown (unless allowed IPs are given and the requester is in the allowed range).
@@ -87,8 +128,6 @@ On every request the Rack app will check to see if `tmp/maintenance.yml` exists.
 So if you want to get the maintenance page up or down in a hurry `touch tmp/maintenance.yml` and `rm tmp/maintenance.yml` will work.
 
 Turnout will attempt to parse the `maintenance.yml` file looking for `reason` and `allowed_ip` settings. The file is checked on every request so you can change these values manually or just rerun the `rake maintenance:start` command.
-
-The location of `maintenance.yml` can be configured using `Turnout.config.update dir: 'your_dir'`.  In Rails, you can drop this in `./config/initializers/turnout_config.rb`.  Using rake activation this would be passed as environment variable `dir`: `dir=tmp/maint rake maintenance:start`.
 
 Example maintenance.yml File
 ----------------------------
