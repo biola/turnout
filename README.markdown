@@ -11,8 +11,9 @@ Features
 * Allow certain paths to be accessible during maintenance
 * Easily override the default maintenance.html file with your own
 * Simple [YAML](http://yaml.org) based config file for easy activation, deactivation and configuration without the rake commands
-* SUpport for multiple maintenance page formats. Current [HTML](http://en.wikipedia.org/wiki/HTML) and [JSON](http://en.wikipedia.org/wiki/JSON)
+* Support for multiple maintenance page formats. Current [HTML](http://en.wikipedia.org/wiki/HTML) and [JSON](http://en.wikipedia.org/wiki/JSON)
 * Supports Rails, [Sinatra](http://sinatrarb.com) and any other Rack application
+* Supports multiple maintenance file paths so that groups of applications can be put into maintenance mode at once.
 
 Installation
 ============
@@ -47,6 +48,10 @@ or
 or
 
     rake maintenance:start reason="Someone told me I should type <code>sudo rm -rf /</code>" allowed_paths="^/help,^/contact_us" allowed_ips="127.0.0.1,192.168.0.0/24"
+    
+or if you've configured `named_maintenance_file_paths` with a path named `server`
+
+    rake maintenance:server:start
 
 Notes
 -----
@@ -60,6 +65,10 @@ Deactivation
 ============
 
     rake maintenance:end
+
+or if you activated with a named path like `server`
+
+    rake maintenance:server:end
 
 Configuration
 =============
