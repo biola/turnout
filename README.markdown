@@ -18,7 +18,7 @@ Features
 Installation
 ============
 Rails 3+
--------
+--------
 In your `Gemfile` add:
 
     gem 'turnout'
@@ -27,6 +27,24 @@ then run
 
     bundle install
 
+Sinatra
+-------
+
+In your Sinatra app file
+
+```ruby
+require 'rack/turnout'
+
+class App < Sinatra::Base
+  configure do
+    use Rack::Turnout
+```
+
+In your Rakefile
+
+```ruby
+require 'turnout/rake_tasks'
+```
 
 Activation
 ==========
