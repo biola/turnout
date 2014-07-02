@@ -11,7 +11,7 @@ spec = Gem::Specification.new do |s|
   s.files = Dir['README.*', 'MIT-LICENSE', 'rails/*.rb', 'config/**/*.rb', 'lib/**/*.rb', 'lib/tasks/*.rake', 'public/*']
   s.require_path = 'lib'
   s.author = 'Adam Crownoble'
-  s.email = 'adam.crownoble@biola.edu'
+  s.email = 'adam@obledesign.com'
   s.homepage = 'https://github.com/biola/turnout'
   s.license = 'MIT'
   s.add_dependency('rack', '~> 1.3')
