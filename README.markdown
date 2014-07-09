@@ -107,7 +107,7 @@ Turnout can be configured in two different ways:
 2. __Using a config block__
 
     ```ruby
-    Turonut.configure do |config|
+    Turnout.configure do |config|
       config.app_root = '/some/path'
       config.named_maintenance_file_paths = {app: 'tmp/app.yml', server: '/tmp/server.yml'},
       config.default_maintenance_page = Turnout::MaintenancePage::JSON
