@@ -99,7 +99,7 @@ Turnout can be configured in two different ways:
     use Rack::Turnout,
       app_root: '/some/path',
       named_maintenance_file_paths: {app: 'tmp/app.yml', server: '/tmp/server.yml'},
-      default_mainteance_page: Turnout::MaintenancePage::JSON,
+      default_maintenance_page: Turnout::MaintenancePage::JSON,
       default_reason: 'Somebody googled Google!',
       default_response_code: 418
     ```
@@ -124,12 +124,11 @@ Default Configuration
 ```ruby
 Turnout.configure do |config|
   config.app_root = '.',
-  config.named_maintenance_file_paths = {default: app_root.join('tmp', 'maintenance.yml').to_s},
+  config.named_maintenance_file_paths = {default: config.app_root.join('tmp', 'maintenance.yml').to_s},
   config.default_maintenance_page = Turnout::MaintenancePage::HTML,
   config.default_reason = "The site is temporarily down for maintenance.\nPlease check back soon.",
   config.default_response_code = 503
 end
-}
 ```
 
 Customization
