@@ -99,7 +99,7 @@ Turnout can be configured in two different ways:
     use Rack::Turnout,
       app_root: '/some/path',
       named_maintenance_file_paths: {app: 'tmp/app.yml', server: '/tmp/server.yml'},
-      default_mainteance_page: Turnout::MaintenancePage::JSON,
+      default_maintenance_page: Turnout::MaintenancePage::JSON,
       default_reason: 'Somebody googled Google!',
       default_response_code: 418
     ```
