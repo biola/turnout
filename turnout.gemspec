@@ -16,6 +16,6 @@ spec = Gem::Specification.new do |s|
   s.license = 'MIT'
   s.add_dependency('rack', '~> 1.3')
   s.add_dependency('rack-accept', '~> 0.4')
-  s.add_development_dependency('rack-test', '~> 0.6.2')
+  s.add_development_dependency('rack-test', '~> 0.6')
   s.add_development_dependency('rspec', '~> 2.12')
 end
