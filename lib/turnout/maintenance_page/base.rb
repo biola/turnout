@@ -34,7 +34,7 @@ module Turnout
       end
 
       def length
-        content.size.to_s
+        content.bytesize.to_s
       end
 
       def body
