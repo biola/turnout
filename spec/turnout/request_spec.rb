@@ -13,7 +13,7 @@ describe Turnout::Request do
     subject { request.allowed?(settings) }
 
     context 'without a maintenance file' do
-      it { should be_false}
+      it { should be false}
     end
 
     context 'with a maintenance file that sets allowed_paths and allowed_ips' do
@@ -23,22 +23,22 @@ describe Turnout::Request do
       let(:file_name) { 'maintenance' }
 
       context 'request for /letmein' do
-        it { should be_false }
+        it { should be false }
       end
 
       context 'request for /uuddlrlrbastart' do
         let(:path) { '/uuddlrlrbastart' }
-        it { should be_true }
+        it { should be true }
       end
 
       context 'request from 42.42.40.40' do
         let(:ip) { '42.42.40.40' }
-        it { should be_false }
+        it { should be false }
       end
 
       context 'request from 10.0.0.42' do
         let(:ip) { '10.0.0.42' }
-        it { should be_true }
+        it { should be true }
       end
     end
   end

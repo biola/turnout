@@ -9,7 +9,7 @@ describe Turnout::MaintenanceFile do
   context 'with a missing file' do
     let(:filename) { 'nope' }
 
-    its(:exists?) { should be_false }
+    its(:exists?) { should be false }
     its(:reason) { should eql "The site is temporarily down for maintenance.\nPlease check back soon." }
     its(:allowed_paths) { should eql [] }
     its(:allowed_ips) { should eql [] }
@@ -17,7 +17,7 @@ describe Turnout::MaintenanceFile do
   end
 
   context 'with an existant file' do
-    its(:exists?) { should be_true }
+    its(:exists?) { should be true }
     its(:reason) { should eql 'Oopsie!'  }
     its(:allowed_paths) { should eql ['/uuddlrlrba.*'] }
     its(:allowed_ips) { should eql ['10.0.0.42', '192.168.1.0/24'] }
@@ -52,8 +52,8 @@ describe Turnout::MaintenanceFile do
 
     it 'writes the file' do
       file = double('file')
-      File.should_receive(:open).with('/tmp/bogus', 'w').and_yield(file)
-      file.should_receive(:write).with(maint_file.to_yaml)
+      expect(File).to receive(:open).with('/tmp/bogus', 'w').and_yield(file)
+      expect(file).to receive(:write).with(maint_file.to_yaml)
 
       maint_file.write
     end
@@ -61,7 +61,7 @@ describe Turnout::MaintenanceFile do
 
   describe '#delete' do
     it 'deletes the file' do
-      File.should_receive(:delete).with(path)
+      expect(File).to receive(:delete).with(path)
       maint_file.delete
     end
   end
@@ -70,7 +70,7 @@ describe Turnout::MaintenanceFile do
     let(:env_vars) { {} }
     before { maint_file.import_env_vars(env_vars) }
 
-    it { expect(maint_file.import_env_vars({})).to be_true }
+    it { expect(maint_file.import_env_vars({})).to be true }
 
     context 'with reason set' do
       let(:env_vars) { {'reason' => 'I made a boo boo'} }
