@@ -7,8 +7,9 @@ module Turnout
         @reason = reason
       end
 
-      def rack_response(code = Turnout.config.default_response_code)
-        [code, headers, body]
+      def rack_response(code = Turnout.config.default_response_code,
+                        retry_after = Turnout.config.default_retry_after)
+        [code, headers(retry_after), body]
       end
 
       # Override with an array of media type strings. i.e. text/html
@@ -29,8 +30,10 @@ module Turnout
         MaintenancePage.all << subclass
       end
 
-      def headers
-        {'Content-Type' => media_types.first, 'Content-Length' => length}
+      def headers(retry_after = nil)
+        headers = {'Content-Type' => media_types.first, 'Content-Length' => length}
+        # Include the Retry-After header unless it wasn't specified
+        headers['Retry-After'] = retry_after unless retry_after.nil? || retry_after.empty?
       end
 
       def length

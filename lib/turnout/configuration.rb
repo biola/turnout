@@ -12,6 +12,7 @@ module Turnout
       @default_maintenance_page = Turnout::MaintenancePage::HTML
       @default_reason = "The site is temporarily down for maintenance.\nPlease check back soon."
       @default_response_code = 503
+      @default_retry_after = 7200 # 2 hours by default
     end
 
     def app_root

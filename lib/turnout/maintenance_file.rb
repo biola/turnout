@@ -5,7 +5,7 @@ module Turnout
   class MaintenanceFile
     attr_reader :path
 
-    SETTINGS = [:reason, :allowed_paths, :allowed_ips, :response_code]
+    SETTINGS = [:reason, :allowed_paths, :allowed_ips, :response_code, :retry_after]
     attr_reader *SETTINGS
 
     def initialize(path)
@@ -14,6 +14,7 @@ module Turnout
       @allowed_paths = []
       @allowed_ips = []
       @response_code = Turnout.config.default_response_code
+      @retry_after = Turnout.config.default_retry_after
 
       import_yaml if exists?
     end
