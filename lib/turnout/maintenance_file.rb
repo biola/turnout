@@ -73,6 +73,10 @@ module Turnout
 
     private
 
+    def retry_after=(value)
+      @retry_after = value
+    end
+
     def reason=(reason)
       @reason = reason.to_s
     end

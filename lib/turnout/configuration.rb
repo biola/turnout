@@ -1,6 +1,7 @@
 module Turnout
   class Configuration
-    SETTINGS = [:app_root, :named_maintenance_file_paths, :default_maintenance_page, :default_reason, :default_response_code]
+    SETTINGS = [:app_root, :named_maintenance_file_paths, :default_maintenance_page, :default_reason,
+                :default_response_code, :default_retry_after]
 
     SETTINGS.each do |setting|
       attr_accessor setting

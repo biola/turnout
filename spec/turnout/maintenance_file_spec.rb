@@ -14,6 +14,7 @@ describe Turnout::MaintenanceFile do
     its(:allowed_paths) { should eql [] }
     its(:allowed_ips) { should eql [] }
     its(:response_code) { should eql 503 }
+    its(:retry_after) { should eql 7200 }
   end
 
   context 'with an existant file' do
@@ -22,16 +23,18 @@ describe Turnout::MaintenanceFile do
     its(:allowed_paths) { should eql ['/uuddlrlrba.*'] }
     its(:allowed_ips) { should eql ['10.0.0.42', '192.168.1.0/24'] }
     its(:response_code) { should eql 418 }
+    its(:retry_after) { should eql 3600 }
 
     describe '#to_h' do
       let(:hash) { maint_file.to_h }
 
       its(:to_h) { should be_a Hash }
-      it { expect(hash.keys).to eql [:reason, :allowed_paths, :allowed_ips, :response_code] }
+      it { expect(hash.keys).to eql [:reason, :allowed_paths, :allowed_ips, :response_code, :retry_after] }
       it { expect(hash[:reason]).to eql 'Oopsie!' }
       it { expect(hash[:allowed_paths]).to eql ['/uuddlrlrba.*'] }
       it { expect(hash[:allowed_ips]).to eql ['10.0.0.42', '192.168.1.0/24'] }
       it { expect(hash[:response_code]).to eql 418 }
+      it { expect(hash[:retry_after]).to eql 3600 }
     end
 
     describe '#to_yaml' do
@@ -39,11 +42,12 @@ describe Turnout::MaintenanceFile do
       subject { yaml }
 
       its(:to_yaml) { should be_a String }
-      it { expect(yaml.keys).to eql ['reason', 'allowed_paths', 'allowed_ips', 'response_code'] }
+      it { expect(yaml.keys).to eql ['reason', 'allowed_paths', 'allowed_ips', 'response_code', 'retry_after'] }
       it { expect(yaml['reason']).to eql 'Oopsie!' }
       it { expect(yaml['allowed_paths']).to eql ['/uuddlrlrba.*'] }
       it { expect(yaml['allowed_ips']).to eql ['10.0.0.42', '192.168.1.0/24'] }
       it { expect(yaml['response_code']).to eql 418 }
+      it { expect(yaml['retry_after']).to eql 3600 }
     end
   end
 
@@ -90,6 +94,11 @@ describe Turnout::MaintenanceFile do
     context 'with response_code set' do
       let(:env_vars) { {'response_code' => 418} }
       its(:response_code) { should eql 418 }
+    end
+
+    context 'with retry_after set' do
+      let(:env_vars) { {'retry_after' => 3600}}
+      its(:retry_after) { should eql 3600 }
     end
   end
 
