@@ -30,7 +30,8 @@ describe Turnout::MaintenancePage::HTML do
     describe '#rack_response' do
       let(:reason) { 'Oops!' }
       let(:code) { nil }
-      let(:raw_response) { instance.rack_response(*[code].compact) }
+      let(:retry_after) { nil }
+      let(:raw_response) { instance.rack_response(code, retry_after) }
       subject { Rack::MockResponse.new(*raw_response) }
 
       context 'without a code' do
@@ -39,6 +40,7 @@ describe Turnout::MaintenancePage::HTML do
         its(:headers) { should be_a Hash }
         its(:headers) { should have_key 'Content-Type' }
         its(:headers) { should have_key 'Content-Length' }
+        its(:headers) { should_not have_key 'Retry-After' }
         its(:content_type) { should eql 'text/html' }
         its(:content_length) { should eql 1198 }
         it { expect(raw_response[2]).to be_an Array }
@@ -49,6 +51,11 @@ describe Turnout::MaintenancePage::HTML do
       context 'with a code' do
         let(:code) { 418 }
         its(:status) { should eql 418 }
+      end
+
+      context 'with retry_after' do
+        let(:retry_after) { 3600 }
+        its(:headers) { should include('Retry-After' => 3600)}
       end
     end
   end

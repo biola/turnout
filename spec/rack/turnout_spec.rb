@@ -19,6 +19,7 @@ describe 'Rack::Turnout' do
     #     - 10.0.0.42
     #     - 192.168.1.0/24
     #   response_code: 418
+    #   retry_after: 3600
 
     context 'with allowed_paths set' do
       describe 'request to allowed path' do
@@ -38,6 +39,13 @@ describe 'Rack::Turnout' do
       describe "request to any path" do
         subject { get '/any_path' }
         its(:status) { should eql 418 }
+      end
+    end
+
+    context 'with retry_after set' do
+      describe "request to any path" do
+        subject { get '/any_path' }
+        its(:headers) { should include('Retry-After' => 3600) }
       end
     end
 

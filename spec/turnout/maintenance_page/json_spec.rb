@@ -30,7 +30,8 @@ describe Turnout::MaintenancePage::JSON do
     describe '#rack_response' do
       let(:reason) { 'Oops!' }
       let(:code) { nil }
-      let(:raw_response) { instance.rack_response(*[code].compact) }
+      let(:retry_after) { nil }
+      let(:raw_response) { instance.rack_response(code, retry_after) }
       subject { Rack::MockResponse.new(*raw_response) }
 
       before do
@@ -38,12 +39,13 @@ describe Turnout::MaintenancePage::JSON do
         def subject.message() json['message'] end
       end
 
-      context 'without a code' do
+      context 'without code and retry_after' do
         it { expect(raw_response).to be_an Array }
         its(:status) { should eql 503 }
         its(:headers) { should be_a Hash }
         its(:headers) { should have_key 'Content-Type' }
         its(:headers) { should have_key 'Content-Length' }
+        its(:headers) { should_not have_key 'Retry-After' }
         its(:content_type) { should eql 'application/json' }
         it { expect(raw_response).to be_an Array }
         its(:json) { should be_a Hash }
@@ -55,6 +57,11 @@ describe Turnout::MaintenancePage::JSON do
       context 'with a code' do
         let(:code) { 418 }
         its(:status) { should eql 418 }
+      end
+
+      context 'with retry_after' do
+        let(:retry_after) { 3600 }
+        its(:headers) { should include('Retry-After' => 3600) }
       end
     end
   end

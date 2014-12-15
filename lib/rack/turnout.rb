@@ -20,7 +20,7 @@ class Rack::Turnout
       page_class = Turnout::MaintenancePage.best_for(env)
       page = page_class.new(settings.reason)
 
-      page.rack_response(settings.response_code)
+      page.rack_response(settings.response_code, settings.retry_after)
     else
       @app.call(env)
     end

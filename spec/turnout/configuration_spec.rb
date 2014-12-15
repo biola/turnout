@@ -36,6 +36,10 @@ describe Turnout::Configuration do
     its(:default_response_code) { should eql 503}
   end
 
+  describe '#default_retry_after' do
+    its(:default_retry_after) { should eql 7200 }
+  end
+
   describe '#update' do
     context 'invalid settings' do
       let(:settings) { {bogus: 'blah'} }
