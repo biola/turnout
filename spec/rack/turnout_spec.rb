@@ -45,7 +45,7 @@ describe 'Rack::Turnout' do
     context 'with retry_after set' do
       describe "request to any path" do
         subject { get '/any_path' }
-        its(:headers) { should include('Retry-After' => 3600) }
+        its(:headers) { should include('Retry-After' => '3600') }
       end
     end
 

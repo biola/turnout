@@ -61,7 +61,7 @@ describe Turnout::MaintenancePage::JSON do
 
       context 'with retry_after' do
         let(:retry_after) { 3600 }
-        its(:headers) { should include('Retry-After' => 3600) }
+        its(:headers) { should include('Retry-After' => '3600') }
       end
     end
   end
