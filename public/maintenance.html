@@ -29,13 +29,28 @@
 
       h1{
         margin: 0;
-        color: #3F4142;
+        color: #303233;
         font-size: 26pt;
+        font-weight: 300;
+      }
+
+      h2{
+        color: #3F4142;
+        font-weight: 300;
       }
 
       #reason{
         margin: 10px 0;
         color: #333;
+      }
+
+      p {
+        line-height: 1;
+        color: grey;
+      }
+
+      .see-you-soon {
+        padding-top: 10px;
       }
 
     </style>
@@ -46,12 +61,20 @@
     <section id="page">
 
       <header>
-        <h1>We're taking a short break</h1>
+        <h1>SHRINK</h1>
+        <h2>We're taking a short break</h1>
       </header>
 
       <section id="body">
-        <div>
-          {{ reason }}
+        <div class="message">
+          <p>We suggest you to do the same.</p>
+          <p>Make yourself a cup of tee.</p>
+          <p>Give an old friend a call.</p>
+          <p>Or even better, write a letter.</p>
+          <p>This shouldn't take long.</p>
+        </div>
+        <div class="see-you-soon">
+          <p>See you soon! :)</p>
         </div>
       </section>
 
