@@ -11,7 +11,7 @@ module Turnout
     def initialize(path)
       @path = path
       @reason = Turnout.config.default_reason
-      @allowed_paths = []
+      @allowed_paths = Turnout.config.default_allowed_paths
       @allowed_ips = []
       @response_code = Turnout.config.default_response_code
       @retry_after = Turnout.config.default_retry_after

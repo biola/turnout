@@ -32,6 +32,10 @@ describe Turnout::Configuration do
     its(:default_reason) { should eql "The site is temporarily down for maintenance.\nPlease check back soon." }
   end
 
+  describe '#default_allowed_paths' do
+    its(:default_allowed_paths) { should eql [] }
+  end
+
   describe '#default_response_code' do
     its(:default_response_code) { should eql 503}
   end

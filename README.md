@@ -101,6 +101,7 @@ Turnout can be configured in two different ways:
       named_maintenance_file_paths: {app: 'tmp/app.yml', server: '/tmp/server.yml'},
       default_maintenance_page: Turnout::MaintenancePage::JSON,
       default_reason: 'Somebody googled Google!',
+      default_allowed_paths: ['^/admin/'],
       default_response_code: 418,
       default_retry_after: 3600
     ```
@@ -113,6 +114,7 @@ Turnout can be configured in two different ways:
       config.named_maintenance_file_paths = {app: 'tmp/app.yml', server: '/tmp/server.yml'}
       config.default_maintenance_page = Turnout::MaintenancePage::JSON
       config.default_reason = 'Somebody googled Google!'
+      config.default_allowed_paths = ['^/admin/']
       config.default_response_code = 418
       config.default_retry_after = 3600
     end
@@ -129,6 +131,7 @@ Turnout.configure do |config|
   config.named_maintenance_file_paths = {default: config.app_root.join('tmp', 'maintenance.yml').to_s}
   config.default_maintenance_page = Turnout::MaintenancePage::HTML
   config.default_reason = "The site is temporarily down for maintenance.\nPlease check back soon."
+  config.default_allowed_paths = []
   config.default_response_code = 503
   config.default_retry_after = 7200
 end
