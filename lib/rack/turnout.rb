@@ -18,7 +18,7 @@ class Rack::Turnout
 
     if settings && !request.allowed?(settings)
       page_class = Turnout::MaintenancePage.best_for(env)
-      page = page_class.new(settings.reason)
+      page = page_class.new(settings.reason, env)
 
       page.rack_response(settings.response_code, settings.retry_after)
     else

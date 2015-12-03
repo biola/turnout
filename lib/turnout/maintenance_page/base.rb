@@ -3,7 +3,8 @@ module Turnout
     class Base
       attr_reader :reason
 
-      def initialize(reason = nil)
+      def initialize(reason = nil, env = {})
+        @rack_env = env
         @reason = reason
       end
 
