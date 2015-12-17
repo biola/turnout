@@ -3,8 +3,8 @@ module Turnout
     class Base
       attr_reader :reason
 
-      def initialize(reason = nil, env = {})
-        @rack_env = env
+      def initialize(reason = nil, options = {})
+        @options = options.is_a?(Hash) ? options : {}
         @reason = reason
       end
 
@@ -47,11 +47,7 @@ module Turnout
       end
 
       def content
-        file_content.gsub /{{\s?reason\s?}}/, reason
-      end
-
-      def file_content
-        File.read(path)
+        Tilt.new(path).render(nil, @options.reverse_merge(reason: reason))
       end
 
       def path
