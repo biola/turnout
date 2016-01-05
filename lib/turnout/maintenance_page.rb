@@ -14,7 +14,7 @@ module Turnout
 
       best = all.find { |page| page.media_types.include? best_type }
 
-      best || Turnout.default_maintenance_page
+      best || Turnout.config.default_maintenance_page
     end
 
     require 'turnout/maintenance_page/base'
