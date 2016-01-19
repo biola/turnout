@@ -25,6 +25,14 @@ module Turnout
       end
       def extension() self.class.extension end
 
+      def path
+        if File.exists? custom_path
+          custom_path
+        else
+          default_path
+        end
+      end
+
       protected
 
       def self.inherited(subclass)
@@ -47,15 +55,11 @@ module Turnout
       end
 
       def content
-        Tilt.new(path).render(nil, @options.reverse_merge(reason: reason))
+         file_content.gsub /{{\s?reason\s?}}/, reason
       end
 
-      def path
-        if File.exists? custom_path
-          custom_path
-        else
-          default_path
-        end
+      def file_content
+        File.read(path)
       end
 
       def default_path
