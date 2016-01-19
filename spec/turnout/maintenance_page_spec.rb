@@ -27,5 +27,11 @@ describe Turnout::MaintenancePage do
 
       it { should eql Turnout::MaintenancePage::JSON }
     end
+
+    context 'with "image/gif" accept header' do
+      let(:content_type) { 'image/gif' }
+
+      it { should eql Turnout::MaintenancePage::HTML }
+    end
   end
 end

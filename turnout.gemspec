@@ -11,7 +11,7 @@ spec = Gem::Specification.new do |s|
   s.files = Dir['README.*', 'MIT-LICENSE', 'rails/*.rb', 'config/**/*.rb', 'lib/**/*.rb', 'lib/tasks/*.rake', 'public/*']
   s.require_path = 'lib'
   s.author = 'Adam Crownoble'
-  s.email = 'adam@obledesign.com'
+  s.email = 'adam@codenoble.com'
   s.homepage = 'https://github.com/biola/turnout'
   s.license = 'MIT'
   s.add_dependency('tilt', '~> 2.0')
