@@ -36,7 +36,7 @@ module Turnout
     end
 
     def write
-      FileUtils.mkdir_p(dir_path) unless Dir.exists? dir_path
+      FileUtils.mkdir_p(dir_path) unless Dir.exist? dir_path
 
       File.open(path, 'w') do |file|
         file.write to_yaml
