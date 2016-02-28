@@ -5,6 +5,7 @@ rvm:
   - 2.1.8
   - 2.2.4
   - 2.3.0
+  - jruby-9.0.5.0
 script: bundle exec rspec
 before_install:
   # fixes Travis CI error: NoMethodError: undefined method `spec' for nil:NilClass
