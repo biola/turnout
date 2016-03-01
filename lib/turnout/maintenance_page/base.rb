@@ -25,12 +25,8 @@ module Turnout
       end
       def extension() self.class.extension end
 
-      def path
-        if File.exists? custom_path
-          custom_path
-        else
-          default_path
-        end
+      def custom_path
+        Turnout.config.app_root.join('public', filename)
       end
 
       protected
@@ -62,13 +58,18 @@ module Turnout
         File.read(path)
       end
 
+      def path
+        if File.exists? custom_path
+          custom_path
+        else
+          default_path
+        end
+      end
+
       def default_path
         File.expand_path("../../../../public/#{filename}", __FILE__)
       end
 
-      def custom_path
-        Turnout.config.app_root.join('public', filename)
-      end
 
       def filename
         "maintenance.#{extension}"

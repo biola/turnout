@@ -7,7 +7,7 @@ module Turnout
     class Erb < Turnout::MaintenancePage::HTML
 
       def content
-        Tilt.new(path).render(nil, {reason: reason}.merge(@options))
+        Tilt.new(File.expand_path(path)).render(nil, {reason: reason}.merge(@options))
       end
 
       def self.extension

@@ -12,8 +12,7 @@ module Turnout
 
       all_types = all.map(&:media_types).flatten
       best_type = request.best_media_type(all_types)
-      best = all.find { |page| page.media_types.include?(best_type) && File.exist?(page.new.path) }
-
+      best = all.find { |page| page.media_types.include?(best_type) && File.exist?(page.new.custom_path) }
       best || Turnout.config.default_maintenance_page
     end
 
