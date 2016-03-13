@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Turnout::MaintenancePage do
   describe '.all' do
     its(:all) { should_not include Turnout::MaintenancePage::Base }
-    its(:all) { should eql [Turnout::MaintenancePage::HTML, Turnout::MaintenancePage::JSON] }
+    its(:all) { should eql [Turnout::MaintenancePage::HTML, Turnout::MaintenancePage::Erb, Turnout::MaintenancePage::JSON] }
   end
 
   describe '.best_for' do

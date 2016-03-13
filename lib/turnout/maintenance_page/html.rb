@@ -1,3 +1,4 @@
+require_relative './base'
 module Turnout
   module MaintenancePage
     class HTML < Base

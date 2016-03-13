@@ -3,7 +3,8 @@ module Turnout
     class Base
       attr_reader :reason
 
-      def initialize(reason = nil)
+      def initialize(reason = nil, options = {})
+        @options = options.is_a?(Hash) ? options : {}
         @reason = reason
       end
 
@@ -23,6 +24,10 @@ module Turnout
         raise NotImplementedError, '.extension must be overridden in subclasses'
       end
       def extension() self.class.extension end
+
+      def custom_path
+        Turnout.config.app_root.join('public', filename)
+      end
 
       protected
 
@@ -46,7 +51,7 @@ module Turnout
       end
 
       def content
-        file_content.gsub /{{\s?reason\s?}}/, reason
+         file_content.gsub /{{\s?reason\s?}}/, reason
       end
 
       def file_content
@@ -65,9 +70,6 @@ module Turnout
         File.expand_path("../../../../public/#{filename}", __FILE__)
       end
 
-      def custom_path
-        Turnout.config.app_root.join('public', filename)
-      end
 
       def filename
         "maintenance.#{extension}"
