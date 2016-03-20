@@ -66,7 +66,7 @@ or
 or
 
     rake maintenance:start reason="Someone told me I should type <code>sudo rm -rf /</code>" allowed_paths="^/help,^/contact_us" allowed_ips="127.0.0.1,192.168.0.0/24"
-    
+
 or if you've configured `named_maintenance_file_paths` with a path named `server`
 
     rake maintenance:server:start
@@ -99,6 +99,7 @@ Turnout can be configured in two different ways:
     use Rack::Turnout,
       app_root: '/some/path',
       named_maintenance_file_paths: {app: 'tmp/app.yml', server: '/tmp/server.yml'},
+      maintenance_pages_path: 'app/views/maintenance',
       default_maintenance_page: Turnout::MaintenancePage::JSON,
       default_reason: 'Somebody googled Google!',
       default_allowed_paths: ['^/admin/'],
@@ -112,6 +113,7 @@ Turnout can be configured in two different ways:
     Turnout.configure do |config|
       config.app_root = '/some/path'
       config.named_maintenance_file_paths = {app: 'tmp/app.yml', server: '/tmp/server.yml'}
+      config.maintenance_pages_path = 'app/views/maintenance'
       config.default_maintenance_page = Turnout::MaintenancePage::JSON
       config.default_reason = 'Somebody googled Google!'
       config.default_allowed_paths = ['^/admin/']
@@ -129,6 +131,7 @@ Default Configuration
 Turnout.configure do |config|
   config.app_root = '.'
   config.named_maintenance_file_paths = {default: config.app_root.join('tmp', 'maintenance.yml').to_s}
+  config.maintenance_pages_path = config.app_root.join('public').to_s
   config.default_maintenance_page = Turnout::MaintenancePage::HTML
   config.default_reason = "The site is temporarily down for maintenance.\nPlease check back soon."
   config.default_allowed_paths = []
@@ -140,7 +143,10 @@ end
 Customization
 =============
 
-[Default maintenance pages](https://github.com/biola/turnout/blob/master/public/) are provided, but you can create your own `public/maintenance.[html|json]` files instead. If you provide a `reason` to the rake task, Turnout will parse the maintenance page file and attempt to replace a [Liquid](http://liquidmarkup.org/)-style `{{ reason }}` tag with the provided reason. So be sure to include a `{{ reason }}` tag in your `maintenance.html` file.
+[Default maintenance pages](https://github.com/biola/turnout/blob/master/public/) are provided, but you can create your own `public/maintenance.[html|json|html.erb]` files instead. If you provide a `reason` to the rake task, Turnout will parse the maintenance page file and attempt to replace a [Liquid](http://liquidmarkup.org/)-style `{{ reason }}` tag with the provided reason. So be sure to include a `{{ reason }}` tag in your `maintenance.html` file. In the case of a `.html.erb` file, `reason` will be a local variable.
+
+__WARNING:__
+The source code of any custom maintenance files you created in the `/public` directory will be able to be viewed by visiting that URL directly (i.e. `http://example.com/maintenance.html.erb`). This shouldn't be an issue with HTML and JSON files but with ERB files, it could be. If you're going to use a custom `.erb.html` file, we recommend you change the `maintenance_pages_path` setting to something other than the `/public` directory.
 
 Tips
 ====
