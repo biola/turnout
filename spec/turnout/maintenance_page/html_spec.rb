@@ -57,6 +57,28 @@ describe Turnout::MaintenancePage::HTML do
         let(:retry_after) { 3600 }
         its(:headers) { should include('Retry-After' => '3600')}
       end
+
+      context 'with a custom maintenance_pages_path' do
+        before do
+          allow(Turnout.config).to receive(:maintenance_pages_path).and_return File.expand_path("../../../#{dirname}/", __FILE__)
+        end
+
+        context 'when a file exists' do
+          let(:dirname) { 'fixtures' }
+
+          it 'renders the custom file' do
+            expect(subject.body).to match 'Custom Maintenance Page'
+          end
+        end
+
+        context "when the file doesn't exist" do
+          let(:dirname) { 'nada' }
+
+          it 'renders the default file' do
+            expect(subject.body).to match 'Down for Maintenance'
+          end
+        end
+      end
     end
   end
 end

@@ -24,6 +24,13 @@ describe Turnout::Configuration do
     end
   end
 
+  describe '#maintenance_pages_path' do
+    its(:maintenance_pages_path) { should eql 'public'}
+    it 'can be changed' do
+      expect { subject.maintenance_pages_path = '/tmp' }.to change { subject.maintenance_pages_path}.from('public').to '/tmp'
+    end
+  end
+
   describe '#default_maintenance_page' do
     its(:default_maintenance_page) { should eql Turnout::MaintenancePage::HTML }
   end

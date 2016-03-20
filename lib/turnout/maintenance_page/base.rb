@@ -26,7 +26,7 @@ module Turnout
       def extension() self.class.extension end
 
       def custom_path
-        Turnout.config.app_root.join('public', filename)
+        Pathname.new(Turnout.config.maintenance_pages_path).join(filename)
       end
 
       protected
