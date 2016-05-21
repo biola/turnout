@@ -151,13 +151,22 @@ The source code of any custom maintenance files you created in the `/public` dir
 Tips
 ====
 
+Denied Paths
+--------------
 There is no `denied_paths` feature because turnout denies everything by default.
 However you can achieve the same sort of functionality by using
 [negative lookaheads](http://www.regular-expressions.info/lookaround.html) with the `allowed_paths` setting, like so:
 
     rake maintenance:start allowed_paths="^(?!/your/under/maintenance/path)"
 
+Multi-App Maintenance
+------------------------
 A central `named_maintenance_file_path` can be configured in all your apps such as `/tmp/turnout.yml` so that all apps on a server can be put into mainteance mode at once. You could even configure service based paths such as `/tmp/mongodb_maintenance.yml` so that all apps using MongoDB could be put into maintenance mode.
+
+Detecting Maintenance Mode
+-------------------------------
+
+If you'd like to detect if maintenance mode is on in your app (for those users or pages that aren't blocked) just call `!Turnout::MaintenanceFile.find.nil?`.
 
 Behind the Scenes
 =================
