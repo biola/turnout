@@ -1,4 +1,4 @@
-Turnout [![Build Status](https://travis-ci.org/biola/turnout.png?branch=master)](https://travis-ci.org/biola/turnout) [![Code Climate](https://codeclimate.com/github/biola/turnout.png)](https://codeclimate.com/github/biola/turnout)
+Turnout [![Build Status](https://travis-ci.org/biola/turnout.svg?branch=master)](https://travis-ci.org/biola/turnout) [![Code Climate](https://codeclimate.com/github/biola/turnout.svg)](https://codeclimate.com/github/biola/turnout) [![Gem Version](https://badge.fury.io/rb/turnout.svg)](https://badge.fury.io/rb/turnout)
 =======
 Turnout is [Rack](http://rack.rubyforge.org/) middleware with a [Ruby on Rails](http://rubyonrails.org) engine that allows you to easily put your app in maintenance mode.
 
