@@ -21,7 +21,11 @@ spec = Gem::Specification.new do |s|
     s.add_dependency('rack', '~> 1.3')
   end
   s.add_dependency('rack-accept', '~> 0.4')
+  s.add_dependency('i18n', '~> 0.7')
   s.add_development_dependency('rack-test', '~> 0.6')
   s.add_development_dependency('rspec', '~> 3.0')
   s.add_development_dependency('rspec-its', '~> 1.0')
+
+  s.add_development_dependency('simplecov', '~> 0.10', '>= 0.10')
+  s.add_development_dependency('simplecov-summary', '~> 0.0.4', '>= 0.0.4')
 end
