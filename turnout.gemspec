@@ -15,11 +15,7 @@ spec = Gem::Specification.new do |s|
   s.homepage = 'https://github.com/biola/turnout'
   s.license = 'MIT'
   s.add_dependency('tilt','>= 1.4', '< 3')
-  if RUBY_VERSION > "2.2.2"
-    s.add_dependency('rack', '>= 1.3', '< 3')
-  else
-    s.add_dependency('rack', '~> 1.3')
-  end
+  s.add_dependency('rack', '>= 1.3', '< 3')
   s.add_dependency('rack-accept', '~> 0.4')
   s.add_development_dependency('rack-test', '~> 0.6')
   s.add_development_dependency('rspec', '~> 3.0')
