@@ -1,8 +1,9 @@
+require_relative './ordered_options'
 module Turnout
   class Configuration
     SETTINGS = [:app_root, :named_maintenance_file_paths,
       :maintenance_pages_path, :default_maintenance_page, :default_reason,
-      :default_allowed_paths, :default_response_code, :default_retry_after]
+      :default_allowed_paths, :default_response_code, :default_retry_after, :i18n]
 
     SETTINGS.each do |setting|
       attr_accessor setting
@@ -17,6 +18,12 @@ module Turnout
       @default_allowed_paths = []
       @default_response_code = 503
       @default_retry_after = 7200 # 2 hours by default
+      @i18n = Turnout::OrderedOptions.new
+      @i18n.railties_load_path = []
+      @i18n.load_path = []
+      @i18n.fallbacks = Turnout::OrderedOptions.new
+      @i18n.enabled = false
+      @i18n.use_language_header = false
     end
 
     def app_root
