@@ -6,7 +6,7 @@ module Turnout
     attr_reader :path
 
     SETTINGS = [:reason, :allowed_paths, :allowed_ips, :response_code, :retry_after]
-    attr_reader *SETTINGS
+    attr_reader(*SETTINGS)
 
     def initialize(path)
       @path = path
