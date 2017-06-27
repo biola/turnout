@@ -51,7 +51,7 @@ module Turnout
       end
 
       def content
-         file_content.gsub /{{\s?reason\s?}}/, reason
+         file_content.gsub(/{{\s?reason\s?}}/, reason)
       end
 
       def file_content
