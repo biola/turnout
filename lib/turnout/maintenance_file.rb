@@ -58,7 +58,7 @@ module Turnout
 
     # Find the first MaintenanceFile that exists
     def self.find
-      path = named_paths.values.find { |path| File.exist? path }
+      path = named_paths.values.find { |p| File.exist? p }
       self.new(path) if path
     end
 
