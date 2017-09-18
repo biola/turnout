@@ -6,7 +6,7 @@ module Turnout
     attr_reader :path
 
     SETTINGS = [:reason, :allowed_paths, :allowed_ips, :response_code, :retry_after]
-    attr_reader *SETTINGS
+    attr_reader(*SETTINGS)
 
     def initialize(path)
       @path = path
@@ -20,7 +20,7 @@ module Turnout
     end
 
     def exists?
-      File.exists? path
+      File.exist? path
     end
 
     def to_h
@@ -58,7 +58,7 @@ module Turnout
 
     # Find the first MaintenanceFile that exists
     def self.find
-      path = named_paths.values.find { |path| File.exists? path }
+      path = named_paths.values.find { |p| File.exist? p }
       self.new(path) if path
     end
 

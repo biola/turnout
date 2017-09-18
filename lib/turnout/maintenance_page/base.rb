@@ -51,7 +51,7 @@ module Turnout
       end
 
       def content
-         file_content.gsub /{{\s?reason\s?}}/, reason
+         file_content.gsub(/{{\s?reason\s?}}/, reason)
       end
 
       def file_content
@@ -59,7 +59,7 @@ module Turnout
       end
 
       def path
-        if File.exists? custom_path
+        if File.exist? custom_path
           custom_path
         else
           default_path
