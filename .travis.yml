@@ -15,6 +15,7 @@ install:
 script: bundle exec rspec
 
 rvm:
-  - 2.2.5
-  - 2.3.1
-  - jruby-9.0.5.0
+  - 2.2.7
+  - 2.3.4
+  - 2.4.1
+  - jruby-9.1.13.0
