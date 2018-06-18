@@ -9,7 +9,7 @@ describe Turnout::Request do
   describe '#allowed?' do
     let(:file_name) { 'missing' }
     let(:file_path) { File.expand_path("../../fixtures/#{file_name}.yml", __FILE__) }
-    let(:settings) { Turnout::MaintenanceFile.new(file_path) }
+    let(:settings) { Turnout::MaintenanceConfig.new(file_path) }
     subject { request.allowed?(settings) }
 
     context 'without a maintenance file' do
@@ -42,4 +42,5 @@ describe Turnout::Request do
       end
     end
   end
+
 end

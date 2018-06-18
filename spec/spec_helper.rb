@@ -8,6 +8,7 @@ require 'rspec'
 require 'rspec/its'
 require 'rack/turnout'
 require 'fixtures/test_app'
+require 'fakeredis'
 # require "codeclimate-test-reporter"
 formatters = [SimpleCov::Formatter::SummaryFormatter,SimpleCov::Formatter::HTMLFormatter]
 

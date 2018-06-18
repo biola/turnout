@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe Turnout::MaintenanceFile do
+describe Turnout::MaintenanceConfig do
   let(:filename) { 'maintenance' }
   let(:path) { File.expand_path("../../fixtures/#{filename}.yml", __FILE__) }
-  let(:maint_file) { Turnout::MaintenanceFile.new(path) }
+  let(:maint_file) { Turnout::MaintenanceConfig.new(path) }
   subject { maint_file }
 
   context 'with a missing file' do
@@ -103,11 +103,11 @@ describe Turnout::MaintenanceFile do
   end
 
   describe '.find' do
-    subject { Turnout::MaintenanceFile.find }
+    subject { Turnout::MaintenanceConfig.find }
 
     context 'when a file exists' do
       before { Turnout.config.named_maintenance_file_paths = {fixture: 'spec/fixtures/maintenance.yml'} }
-      it { should be_a Turnout::MaintenanceFile }
+      it { should be_a Turnout::MaintenanceConfig }
     end
 
     context 'when no file exists' do
@@ -117,13 +117,13 @@ describe Turnout::MaintenanceFile do
   end
 
   describe '.named' do
-    subject { Turnout::MaintenanceFile.named(name) }
+    subject { Turnout::MaintenanceConfig.named(name) }
 
     before { Turnout.config.named_maintenance_file_paths = {valid: 'spec/fixtures/nope.yml'} }
 
     context 'when a valid name' do
       let(:name) { :valid }
-      it { should be_a Turnout::MaintenanceFile }
+      it { should be_a Turnout::MaintenanceConfig }
     end
 
     context 'when an invalid name' do
@@ -133,7 +133,7 @@ describe Turnout::MaintenanceFile do
   end
 
   describe '.default' do
-    subject { Turnout::MaintenanceFile.default }
-    it { should be_a Turnout::MaintenanceFile }
+    subject { Turnout::MaintenanceConfig.default }
+    it { should be_a Turnout::MaintenanceConfig }
   end
 end

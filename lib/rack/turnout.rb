@@ -14,9 +14,14 @@ class Rack::Turnout
 
   def call(env)
     request = Turnout::Request.new(env)
-    settings = Turnout::MaintenanceFile.find
+    mf = Turnout::MaintenanceConfig.find
+    if mf
+      settings = mf
+    else
+      settings = Turnout::MaintenanceConfig.default
+    end
 
-    if settings && !request.allowed?(settings)
+    if (Turnout::RedisClient.maintenance?(settings) || mf) && !request.allowed?(settings)
       page_class = Turnout::MaintenancePage.best_for(env)
       page = page_class.new(settings.reason, env: env)
 

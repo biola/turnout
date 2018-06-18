@@ -88,6 +88,37 @@ or if you activated with a named path like `server`
 
     rake maintenance:server:end
 
+Redis
+=====
+
+Using the cli
+-------------
+__When your app is running__
+
+Start up ```redis-cli```
+
+__Use maintenance mode__
+
+```set turnout:maintenance <any value>```
+
+All the config should go in your config block in your app directory
+
+__Stop maintenance mode__
+
+```del turnout:maintenance```
+
+Using rake
+----------
+To activate, use
+
+```rake maintenance:start```
+
+To deactivate, use
+
+```rake maintenance:end```
+
+Redis mode currently does not support environmental variables
+
 Configuration
 =============
 
@@ -166,7 +197,7 @@ A central `named_maintenance_file_path` can be configured in all your apps such 
 Detecting Maintenance Mode
 -------------------------------
 
-If you'd like to detect if maintenance mode is on in your app (for those users or pages that aren't blocked) just call `!Turnout::MaintenanceFile.find.nil?`.
+If you'd like to detect if maintenance.yml is on in your app (for those users or pages that aren't blocked) just call `!Turnout::MaintenancePage.find.nil?`.
 
 Behind the Scenes
 =================
