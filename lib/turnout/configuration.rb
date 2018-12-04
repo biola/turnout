@@ -1,9 +1,19 @@
 require_relative './ordered_options'
 module Turnout
   class Configuration
-    SETTINGS = [:skip_middleware, :app_root, :named_maintenance_file_paths,
-      :maintenance_pages_path, :default_maintenance_page, :default_reason,
-      :default_allowed_paths, :default_response_code, :default_retry_after, :i18n]
+    SETTINGS = [
+      :app_root,
+      :named_maintenance_file_paths,
+      :maintenance_pages_path,
+      :default_maintenance_page,
+      :default_reason,
+      :default_allowed_ips,
+      :skip_middleware,
+      :default_allowed_paths,
+      :default_response_code,
+      :default_retry_after,
+      :i18n
+    ].freeze
 
     SETTINGS.each do |setting|
       attr_accessor setting
@@ -17,6 +27,7 @@ module Turnout
       @default_maintenance_page = Turnout::MaintenancePage::HTML
       @default_reason = "The site is temporarily down for maintenance.\nPlease check back soon."
       @default_allowed_paths = []
+      @default_allowed_ips = []
       @default_response_code = 503
       @default_retry_after = 7200 # 2 hours by default
       @i18n = Turnout::OrderedOptions.new
