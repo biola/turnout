@@ -9,6 +9,10 @@ before_install:
   - "echo 'gem: --no-ri --no-rdoc' > ~/.gemrc"
   - gem install bundler
 
+env:
+  global:
+    - JRUBY_OPTS="--debug"
+
 install:
   - bundle install --path vendor/bundle
 
@@ -18,4 +22,4 @@ rvm:
   - 2.2.7
   - 2.3.4
   - 2.4.1
-  - jruby-9.1.13.0
+  - jruby-9.2.4.0

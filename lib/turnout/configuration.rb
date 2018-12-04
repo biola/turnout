@@ -1,15 +1,26 @@
 require_relative './ordered_options'
 module Turnout
   class Configuration
-    SETTINGS = [:app_root, :named_maintenance_file_paths,
-      :maintenance_pages_path, :default_maintenance_page, :default_reason, :default_allowed_ips,
-      :default_allowed_paths, :default_response_code, :default_retry_after, :i18n]
+    SETTINGS = [
+      :app_root,
+      :named_maintenance_file_paths,
+      :maintenance_pages_path,
+      :default_maintenance_page,
+      :default_reason,
+      :default_allowed_ips,
+      :skip_middleware,
+      :default_allowed_paths,
+      :default_response_code,
+      :default_retry_after,
+      :i18n
+    ].freeze
 
     SETTINGS.each do |setting|
       attr_accessor setting
     end
 
     def initialize
+      @skip_middleware = false
       @app_root = '.'
       @named_maintenance_file_paths = {default: app_root.join('tmp', 'maintenance.yml').to_s}
       @maintenance_pages_path = app_root.join('public').to_s

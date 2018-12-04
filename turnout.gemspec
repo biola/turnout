@@ -17,7 +17,7 @@ spec = Gem::Specification.new do |s|
   s.add_dependency('tilt','>= 1.4', '< 3')
   s.add_dependency('rack', '>= 1.3', '< 3')
   s.add_dependency('rack-accept', '~> 0.4')
-  s.add_dependency('i18n', '~> 0.7')
+  s.add_dependency('i18n', '>= 0.7', '< 2')
   s.add_development_dependency('rack-test', '~> 0.6')
   s.add_development_dependency('rspec', '~> 3.0')
   s.add_development_dependency('rspec-its', '~> 1.0')
