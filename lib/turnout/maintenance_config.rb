@@ -2,7 +2,7 @@ require 'yaml'
 require 'fileutils'
 
 module Turnout
-  class MaintenanceFile
+  class MaintenanceConfig
     attr_reader :path
 
     SETTINGS = [:reason, :allowed_paths, :allowed_ips, :response_code, :retry_after]
@@ -17,6 +17,10 @@ module Turnout
       @retry_after = Turnout.config.default_retry_after
 
       import_yaml if exists?
+    end
+
+    def change_reason(message)
+      @reason = message
     end
 
     def exists?
@@ -56,7 +60,7 @@ module Turnout
     end
     alias :import_env_vars :import
 
-    # Find the first MaintenanceFile that exists
+    # Find the first maintenance file that exists
     def self.find
       path = named_paths.values.find { |p| File.exist? p }
       self.new(path) if path

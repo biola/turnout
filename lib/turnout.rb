@@ -1,8 +1,9 @@
 module Turnout
   require 'turnout/configuration'
-  require 'turnout/maintenance_file'
+  require 'turnout/maintenance_config'
   require 'turnout/maintenance_page'
   require 'turnout/request'
+  require 'turnout/redis_client'
   require 'turnout/engine' if defined? Rails
 
   def self.configure

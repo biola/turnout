@@ -4,6 +4,19 @@ describe 'Rack::Turnout' do
   let(:endpoint) { TestApp.new }
   let(:app) { Rack::Turnout.new(endpoint) }
 
+  context 'redis client maintenance page' do
+    subject{ get '/any_path' }
+    its(:status) {
+      allow(Turnout::RedisClient).to receive(:maintenance?).and_return(true)
+      should eql 503 }
+    its(:body) {
+      allow(Turnout::RedisClient).to receive(:maintenance?).and_return(true)
+      should_not eql 'Hello World!' }
+    its(:body) {
+      allow(Turnout::RedisClient).to receive(:maintenance?).and_return(true)
+      should match 'Down for Maintenance' }
+  end
+
   context 'without a maintenance.yml file' do
     subject { get '/any_path' }
     its(:status) { should eql 200 }
