@@ -111,6 +111,7 @@ Turnout can be configured in two different ways:
 
     ```ruby
     Turnout.configure do |config|
+      config.skip_middleware = true
       config.app_root = '/some/path'
       config.named_maintenance_file_paths = {app: 'tmp/app.yml', server: '/tmp/server.yml'}
       config.maintenance_pages_path = 'app/views/maintenance'
