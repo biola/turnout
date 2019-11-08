@@ -26,6 +26,8 @@ In your `Gemfile` add:
 then run
 
     bundle install
+    
+_Note that you'll need to restart your Rails server before it will work_
 
 Sinatra
 -------
