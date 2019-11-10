@@ -95,7 +95,18 @@ module Turnout
 
     # Splits strings on commas for easier importing of environment variables
     def allowed_ips=(ips)
-      ips = ips.to_s.split(',') if ips.is_a? String
+      ips = ips.to_s.split(/\s*,\s*/) if ips.is_a? String
+      # allow hostnames
+      ips = ips.map do |host|
+        next host if host =~ IPAddr::RE_IPV4ADDRLIKE
+        next host if host =~ IPAddr::RE_IPV6ADDRLIKE_FULL
+        next host if host =~ IPAddr::RE_IPV6ADDRLIKE_COMPRESSED
+        # DNS lookup pro request (cached by OS), works with DynDNS
+        hostname, aliases, family, *address_list = Socket.gethostbyname(host)
+        address_list.map do |addr|
+          ip = IPAddr::ntop(addr)
+        end
+      end.flatten
 
       @allowed_ips = ips
     end
