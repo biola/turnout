@@ -66,10 +66,17 @@ module Turnout
         end
       end
 
-      def default_path
-        File.expand_path("../../../../public/#{filename}", __FILE__)
+      def rails_public_path
+        File.join(Rails.root, 'public', filename) if defined?(Rails)
       end
 
+      def default_path
+        if defined?(Rails) && File.exist?(rails_public_path)
+          rails_public_path
+        else
+          File.expand_path("../../../../public/#{filename}", __FILE__)
+        end
+      end
 
       def filename
         "maintenance.#{extension}"
