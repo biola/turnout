@@ -36,7 +36,9 @@ module Turnout
       end
 
       def headers(retry_after = nil)
-        headers = {'Content-Type' => media_types.first, 'Content-Length' => length}
+        headers = defined?(Rack::Headers) ? Rack::Headers.new : {}
+        headers['Content-Type'] = media_types.first
+        headers['Content-Length'] = length
         # Include the Retry-After header unless it wasn't specified
         headers['Retry-After'] = retry_after.to_s unless retry_after.nil?
         headers
