@@ -37,7 +37,7 @@ describe 'Rack::Turnout' do
 
     context 'with response_code set' do
       describe "request to any path" do
-        subject { get '/any_path' }
+        subject { Rack::MockRequest.new(app).get('/any_path', lint: true) }
         its(:status) { should eql 418 }
       end
     end
